@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 const isContact = (array, name, number) => {
   //this functions iterates through the App state "persons" and checks if the name matches with string "name"
   if (
@@ -40,6 +40,10 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setnewNumber] = useState("");
   const [filtered, setFiltered] = useState(persons);
+  const myref = useRef(filtered);
+  useEffect(() => {
+    setFiltered(persons);
+  }, [persons]);
 
   const filterHandler = (event) => {
     const char = event.target.value;
@@ -63,7 +67,7 @@ const App = () => {
         );
     setNewName("");
     setnewNumber("");
-    setFiltered(persons);
+    // setFiltered(persons);
   };
   const nameInputHandler = (e) => {
     setNewName(e.target.value);
