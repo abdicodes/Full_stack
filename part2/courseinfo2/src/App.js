@@ -23,17 +23,12 @@ const Content = (props) => {
   );
 };
 const Course = (props) => {
-  // console.log(props.course);
   return props.course.map((course) => {
     return (
       <div key={course.id}>
         <Header courseName={course.name} id={course.id} />
         <Content parts={course.parts} id={course.id} />
         <Total parts={course.parts} id={course.id} />
-
-        {/* <Header courseName={props.course.name} />
-      // <Content parts={props.course.parts} />
-      // <Total parts={props.course.parts} /> */}
       </div>
     );
   });

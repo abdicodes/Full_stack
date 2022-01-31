@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import Filter from "./Filter";
+import PersonForm from "./PersonForm";
+import Persons from "./Persons";
+//this functions iterates through the App state "persons" and checks if the name matches with string "name"
 const isContact = (array, name, number) => {
-  //this functions iterates through the App state "persons" and checks if the name matches with string "name"
   if (
     array.find(
       (e) =>
@@ -13,17 +16,14 @@ const isContact = (array, name, number) => {
     return false;
   }
 };
-const searching = (char, array) => {
+
+// this function will take an array and string characters as inputs. string is coming from user input against elements
+const Searching = (char, array) => {
   if (char) {
     const a = [];
     array.forEach((element) => {
-      // console.log(element);
-
-      // if (JSON.stringify(element).includes(JSON.stringify(char))) {
-      //   a.push(JSON.stringify(element));
-      if (element.name.includes(char)) {
+      if (element.name.toLowerCase().includes(char.toLowerCase())) {
         a.push(element);
-        console.log(a);
       }
     });
     return a;
@@ -40,15 +40,13 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setnewNumber] = useState("");
   const [filtered, setFiltered] = useState(persons);
-  const myref = useRef(filtered);
   useEffect(() => {
     setFiltered(persons);
   }, [persons]);
 
   const filterHandler = (event) => {
     const char = event.target.value;
-
-    setFiltered(searching(char, persons));
+    setFiltered(Searching(char, persons));
   };
 
   const addPerson = (event) => {
@@ -67,7 +65,6 @@ const App = () => {
         );
     setNewName("");
     setnewNumber("");
-    // setFiltered(persons);
   };
   const nameInputHandler = (e) => {
     setNewName(e.target.value);
@@ -79,34 +76,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <div id="filter">
-          filter shown with <input onChange={filterHandler} />
-        </div>
-      </form>
+      <Filter handler={filterHandler} />
       <h2>Add a new</h2>
-
-      <form>
-        <div>
-          name: <input value={newName} onChange={nameInputHandler} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={numberInputHandler} />
-        </div>
-        <div>
-          <button type="submit" onClick={addPerson}>
-            add
-          </button>
-        </div>
-      </form>
+      <PersonForm
+        name={newName}
+        number={newNumber}
+        nameHandler={nameInputHandler}
+        numberHandler={numberInputHandler}
+        adder={addPerson}
+      />
       <h2>Numbers</h2>
-      <div>
-        {filtered.map((e, i) => (
-          <div key={i}>
-            {e.name} {e.number}
-          </div>
-        ))}
-      </div>
+      <Persons contacts={filtered} />
     </div>
   );
 };
