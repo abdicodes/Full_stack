@@ -13,6 +13,25 @@ const search = (array, char) => {
   }
   return [];
 };
+const Details = ({ country }) => {
+  return (
+    <div>
+      <h1> {country.name}</h1>
+      <h4> Capital: {country.capital}</h4>
+      <h4>Population: {country.population}</h4>
+      <h2>Languages</h2>
+      <ul>
+        {country.languages.forEach((e, i) => {
+          <li id={i}> {e.name}</li>;
+        })}
+      </ul>
+      <div>
+        {" "}
+        <img src={country.flags.png} alt="flag" />
+      </div>
+    </div>
+  );
+};
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [countrySearch, setCountrySearch] = useState("");
@@ -31,6 +50,7 @@ const App = () => {
   const eventHandler = (e) => {
     setCountrySearch(e.target.value);
   };
+
   const CountryList = ({ countries }) => {
     return (
       <div>
@@ -55,7 +75,14 @@ const App = () => {
         ))}
       </div> */}
       {/* <CountryList countries={searchList} /> */}
-      <CountryList countries={searchList} />
+
+      <div>
+        {searchList.length === 1 ? (
+          <Details country={searchList[0]} />
+        ) : (
+          <CountryList countries={searchList} />
+        )}
+      </div>
     </div>
   );
 };
