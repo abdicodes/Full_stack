@@ -76,23 +76,29 @@ const App = () => {
   }, [countrySearch]);
 
   useEffect(() => {
-    if (searchList.length === 1) {
+    if (countryDetails) {
       console.log("not ready");
-      console.log(searchList);
 
       axios
         .get(
-          `http://api.weatherapi.com/v1/current.json?key=${api_key}&q=${searchList[0].capital}&aqi=no`
+          `http://api.weatherapi.com/v1/current.json?key=${api_key}&q=${countryDetails.capital}&aqi=no`
         )
         .then((response) => {
           setWeather(response.data);
-          setCountryDetails(setSearchList[0]);
           setStatus(true);
           console.log("Weather promise fulfilled");
         });
     }
-  }, [searchList, api_key]);
+  }, [countryDetails, api_key]);
 
+  //this useEffect will check if a search result is equal to one and change the state of a single country details in order to display the details
+  useEffect(() => {
+    if (searchList.length === 1) {
+      setCountryDetails(searchList[0]);
+    }
+  }, [searchList]);
+
+  // this component returns 10 or less countries upon search I defined it inside App as it is interacting with with the app state
   const CountryList = ({ countries }) => {
     return countryDetails === null ? (
       <div>
