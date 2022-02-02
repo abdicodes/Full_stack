@@ -38,10 +38,17 @@ const Details = (props) => {
       <div>
         <img src={country.flags.png} alt="flag" />
       </div>
-      <h2>
-        Weather in {country.capital} is {status && weatherInfo.current.temp_c}
-      </h2>
-      <div></div>
+      <h2>Weather in {country.capital}</h2>
+      <div>
+        Temperature: {status && weatherInfo.current.temp_c}
+        <br />
+        {status && weatherInfo.current.condition.text}
+        <br />
+        <img src={status && weatherInfo.current.condition.icon} />
+        <br />
+        Wind: {status && weatherInfo.current.wind_mph} mph , direction{" "}
+        {status && weatherInfo.current.wind_dir}
+      </div>
     </div>
   );
 };
