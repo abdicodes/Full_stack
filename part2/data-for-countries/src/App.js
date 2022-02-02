@@ -19,7 +19,11 @@ const search = (array, char) => {
 };
 
 /* this component returns a single country  */
-const Details = ({ country }) => {
+const Details = (props) => {
+  const country = props.country;
+  const weatherInfo = props.weatherInfo;
+  const status = props.status;
+
   return (
     <div>
       <h1> {country.name}</h1>
@@ -34,6 +38,10 @@ const Details = ({ country }) => {
       <div>
         <img src={country.flags.png} alt="flag" />
       </div>
+      <h2>
+        Weather in {country.capital} is {status && weatherInfo.current.temp_c}
+      </h2>
+      <div></div>
     </div>
   );
 };
@@ -41,8 +49,12 @@ const App = () => {
   const [countries, setCountries] = useState([]);
   const [countrySearch, setCountrySearch] = useState("");
   const [searchList, setSearchList] = useState([]);
+  const [weather, setWeather] = useState(null);
   const [countryDetails, setCountryDetails] = useState(null);
+  const [status, setStatus] = useState(false);
+  const api_key = process.env.REACT_APP_API_KEY;
 
+  //API call to fetch countries data and save the data in the useState countries.
   useEffect(() => {
     console.log("effect");
     axios.get("https://restcountries.com/v2/all").then((response) => {
@@ -50,6 +62,8 @@ const App = () => {
       setCountries(response.data);
     });
   }, []);
+  //API call to fetch weather data from www.weatherapi.com
+
   useEffect(() => {
     setSearchList(search(countries, countrySearch));
   }, [countrySearch, countries]);
@@ -58,7 +72,26 @@ const App = () => {
   };
   useEffect(() => {
     setCountryDetails(null);
+    setStatus(false);
   }, [countrySearch]);
+
+  useEffect(() => {
+    if (searchList.length === 1) {
+      console.log("not ready");
+      console.log(searchList);
+
+      axios
+        .get(
+          `http://api.weatherapi.com/v1/current.json?key=${api_key}&q=${searchList[0].capital}&aqi=no`
+        )
+        .then((response) => {
+          setWeather(response.data);
+          setCountryDetails(setSearchList[0]);
+          setStatus(true);
+          console.log("Weather promise fulfilled");
+        });
+    }
+  }, [searchList, api_key]);
 
   const CountryList = ({ countries }) => {
     return countryDetails === null ? (
@@ -84,7 +117,11 @@ const App = () => {
       </div>
     ) : (
       <div>
-        <Details country={countryDetails} />{" "}
+        <Details
+          country={countryDetails}
+          weatherInfo={weather}
+          status={status}
+        />
       </div>
     );
   };
@@ -98,7 +135,11 @@ const App = () => {
 
       <div>
         {searchList.length === 1 ? (
-          <Details country={searchList[0]} />
+          <Details
+            country={searchList[0]}
+            weatherInfo={weather}
+            status={status}
+          />
         ) : (
           <CountryList countries={searchList} />
         )}
