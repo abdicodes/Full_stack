@@ -65,13 +65,13 @@ const App = () => {
         persons.concat({
           name: newName,
           number: newNumber,
-          id: persons.length === 0 ? 1 : persons.at(-1).id + 1,
+          id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1,
         })
       );
       backEndLogic.create({
         name: newName,
         number: newNumber,
-        id: persons.length === 0 ? 1 : persons.at(-1).id + 1,
+        id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1,
       });
       setNewName("");
       setnewNumber("");
