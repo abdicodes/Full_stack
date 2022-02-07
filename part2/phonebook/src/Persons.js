@@ -1,6 +1,4 @@
-import backEndLogic from "./backEndLogic";
-
-const Persons = ({ contacts, stateChanger }) => {
+const Persons = ({ contacts, deleteHandler }) => {
   return (
     <div>
       {contacts.map((e) => (
@@ -9,9 +7,8 @@ const Persons = ({ contacts, stateChanger }) => {
           <button
             type="submit"
             onClick={(event) => {
-              // event.preventDefault();
-              backEndLogic.deleteContact(e.id);
-              stateChanger();
+              event.preventDefault();
+              deleteHandler(e.id, e.name);
             }}
           >
             Delete

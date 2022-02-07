@@ -3,6 +3,7 @@ import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
 import backEndLogic from "./backEndLogic";
+import Notification from "./Notification";
 //this functions iterates through the App state "persons" and checks if the name matches with string "name"
 const isContact = (array, name) => {
   return array.find((e) => e.name === name);
@@ -28,6 +29,8 @@ const App = () => {
   const [newNumber, setnewNumber] = useState("");
   const [filtered, setFiltered] = useState(persons);
   const [deleted, setDeleted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [confirmMessage, setConfirmMessage] = useState(null);
   useEffect(() => {
     setFiltered(persons);
   }, [persons, deleted]);
@@ -41,6 +44,7 @@ const App = () => {
     setFiltered(Searching(char, persons));
   };
   const contactsRefresher = () => setDeleted(!deleted);
+
   const addPerson = (event) => {
     //adds a person if the string is not empty and uses isContact function to check if name in newName exist
     event.preventDefault();
@@ -59,6 +63,10 @@ const App = () => {
         setNewName("");
         setnewNumber("");
         setDeleted(!deleted);
+        setConfirmMessage(`Contact has succesfully been updated`);
+        setTimeout(() => {
+          setConfirmMessage(null);
+        }, 5000);
       }
     } else {
       setPersons(
@@ -76,6 +84,10 @@ const App = () => {
       setNewName("");
       setnewNumber("");
       setDeleted(!deleted);
+      setConfirmMessage(`Contact has succesfully been added`);
+      setTimeout(() => {
+        setConfirmMessage(null);
+      }, 5000);
     }
   };
   const nameInputHandler = (e) => {
@@ -84,10 +96,36 @@ const App = () => {
   const numberInputHandler = (e) => {
     setnewNumber(e.target.value);
   };
+  const errorMessageHandler = (e) => {
+    try {
+      backEndLogic(e);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const deleteHandler = (id, name) => {
+    backEndLogic.deleteContact(id).catch((e) => {
+      setDeleted(!deleted);
+      setErrorMessage(
+        `information on ${name} has already been removed from server`
+      );
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    });
+
+    contactsRefresher();
+  };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification
+        message={errorMessage}
+        color="red"
+        errorHandler={errorMessageHandler}
+      />
+      <Notification message={confirmMessage} color="green" />
       <Filter handler={filterHandler} />
       <h2>Add a new</h2>
       <PersonForm
@@ -98,7 +136,7 @@ const App = () => {
         adder={addPerson}
       />
       <h2>Numbers</h2>
-      <Persons contacts={filtered} stateChanger={contactsRefresher} />
+      <Persons contacts={filtered} deleteHandler={deleteHandler} />
     </div>
   );
 };
