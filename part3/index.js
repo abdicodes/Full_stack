@@ -1,6 +1,6 @@
-const e = require("express");
 const express = require("express");
 const app = express();
+const morgan = require("morgan");
 let persons = [
   {
     id: 1,
@@ -25,6 +25,8 @@ let persons = [
 ];
 
 app.use(express.json());
+morgan.token("body", (req, res) => JSON.stringify(req.body));
+app.use(morgan(":method :url :status :response-time ms :body"));
 
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
@@ -35,7 +37,7 @@ app.get("/api/persons", (request, response) => {
 });
 app.get("/api/notes/:id", (request, response) => {
   const id = request.params.id;
-  console.log(id);
+
   const note = notes.find((note) => note.id === Number(id));
 
   if (note) {
@@ -53,13 +55,11 @@ app.get("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
 
   const person = persons.find((person) => person.id === id);
-  console.log(person);
+
   if (person) {
     res.json(person);
-    console.log("OK");
   } else {
     res.status(404).end();
-    console.log("not OK");
   }
 });
 app.delete("/api/persons/:id", (req, res) => {
@@ -75,16 +75,16 @@ app.post("/api/persons", (req, res) => {
       error: "name must be unique",
     });
   }
-  console.log(contact);
+
   if (contact.name && contact.number) {
     const person = {
       name: contact.name,
       number: contact.number,
       id: id,
     };
-    console.log(person);
+
     persons = persons.concat(person);
-    console.log(persons);
+
     res.json(person);
   } else {
     return res.status(400).json({
