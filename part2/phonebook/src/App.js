@@ -104,15 +104,22 @@ const App = () => {
     }
   };
   const deleteHandler = (id, name) => {
-    backEndLogic.deleteContact(id).catch((e) => {
-      setDeleted(!deleted);
-      setErrorMessage(
-        `information on ${name} has already been removed from server`
-      );
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    });
+    if (!window.confirm(`Are you sure you want to delete ${name} ?`)) {
+      return;
+    }
+    backEndLogic
+      .deleteContact(id)
+      .then((res) => console.log(res))
+      .catch((e) => {
+        console.log(e);
+        setDeleted(!deleted);
+        setErrorMessage(
+          `information on ${name} has already been removed from server`
+        );
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
+      });
 
     contactsRefresher();
   };
