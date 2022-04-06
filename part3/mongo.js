@@ -9,7 +9,7 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2];
 
-const url = `mongodb+srv://abdicodes:${password}@cluster0.5yjqd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const url = `mongodb+srv://abdicodes:${password}@cluster0.5yjqd.mongodb.net/noteApp?retryWrites=true&w=majority`;
 
 mongoose.connect(url);
 
@@ -21,13 +21,19 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model("Note", noteSchema);
 
-const note = new Note({
-  content: "HTML is Easy",
-  date: new Date(),
-  important: true,
-});
+// const note = new Note({
+//   content: "HTML is Easy",
+//   date: new Date(),
+//   important: true,
+// });
 
-note.save().then((result) => {
-  console.log("note saved!");
+// note.save().then((result) => {
+//   console.log(result);
+//   mongoose.connection.close();
+// });
+Note.find({}).then((result) => {
+  result.forEach((note) => {
+    console.log(note);
+  });
   mongoose.connection.close();
 });
