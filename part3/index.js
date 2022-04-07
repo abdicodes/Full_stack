@@ -3,7 +3,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
-const Note = require("./models/note");
+// const Note = require("./models/note");
+const Person = require("./models/persons");
 
 const requestLogger = (request, response, next) => {
   console.log("Method:", request.method);
@@ -75,16 +76,11 @@ app.get("/api/notes", (request, response) => {
     response.json(notes);
   });
 });
+
 app.get("/api/notes/:id", (request, response) => {
-  const id = request.params.id;
-
-  const note = notes.find((note) => note.id === Number(id));
-
-  if (note) {
+  Note.findById(request.params.id).then((note) => {
     response.json(note);
-  } else {
-    response.status(404).end();
-  }
+  });
 });
 app.post("/api/notes", (request, response) => {
   const body = request.body;
@@ -95,16 +91,14 @@ app.post("/api/notes", (request, response) => {
     });
   }
 
-  const note = {
+  const note = new Note({
     content: body.content,
     important: body.important || false,
     date: new Date(),
-    id: generateId(),
-  };
-
-  notes = notes.concat(note);
-
-  response.json(note);
+  });
+  note.save().then((savedNote) => {
+    response.json(savedNote);
+  });
 });
 app.delete("/api/notes/:id", (request, response) => {
   const id = Number(request.params.id);
@@ -139,7 +133,9 @@ app.get("/info", (req, res) => {
 });
 
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((result) => {
+    response.json(result);
+  });
 });
 app.get("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
