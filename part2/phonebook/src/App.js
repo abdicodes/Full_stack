@@ -48,6 +48,7 @@ const App = () => {
   const addPerson = (event) => {
     //adds a person if the string is not empty and uses isContact function to check if name in newName exist
     event.preventDefault();
+
     if (newName === "") return;
     const existing_contact = isContact(persons, newName);
     if (existing_contact) {
@@ -69,18 +70,14 @@ const App = () => {
         }, 5000);
       }
     } else {
-      setPersons(
-        persons.concat({
+      backEndLogic
+        .create({
           name: newName,
           number: newNumber,
-          id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1,
         })
-      );
-      backEndLogic.create({
-        name: newName,
-        number: newNumber,
-        id: persons.length === 0 ? 1 : persons[persons.length - 1].id + 1,
-      });
+        .then((res) => setPersons(persons.concat(res)));
+
+      //clear input and display the message
       setNewName("");
       setnewNumber("");
       setDeleted(!deleted);

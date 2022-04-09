@@ -160,11 +160,18 @@ app.delete("/api/persons/:id", (req, res, next) => {
     .then((result) => res.status(204).end())
     .catch((err) => next(err));
 });
-app.post("/api/persons", (req, res) => {
-  contact = req.body;
-  if (!contact.number || !contact.name) {
+app.post("/api/persons", (req, res, next) => {
+  if (!req.body.number || !req.body.name) {
     return res.status(400).json({ error: "name or number is missing" });
   }
+  const person = new Person({
+    name: req.body.name,
+    number: req.body.number,
+  });
+  person
+    .save()
+    .then((savedContact) => res.json(savedContact))
+    .catch((err) => next(err));
 });
 
 const unknownEndpoint = (request, response) => {
