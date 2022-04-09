@@ -49,6 +49,7 @@ const App = () => {
     //adds a person if the string is not empty and uses isContact function to check if name in newName exist
     event.preventDefault();
 
+    //logic to check if the name already exists and use PUT to modify.
     if (newName === "") return;
     const existing_contact = isContact(persons, newName);
     if (existing_contact) {
@@ -69,6 +70,7 @@ const App = () => {
           setConfirmMessage(null);
         }, 5000);
       }
+      // logic to add a new contact using POST
     } else {
       backEndLogic
         .create({

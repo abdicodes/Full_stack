@@ -19,60 +19,13 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
   }
-
   next(error);
 };
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    date: "2022-05-30T17:30:31.098Z",
-    important: true,
-  },
-  {
-    id: 2,
-    content: "Browser can execute only Javascript",
-    date: "2022-05-30T18:39:34.091Z",
-    important: false,
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    date: "2022-05-30T19:20:14.298Z",
-    important: true,
-  },
-];
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+
 app.use(cors());
-
-const generateId = () => {
-  const maxId = notes.length > 0 ? Math.max(...notes.map((n) => n.id)) : 0;
-  return maxId + 1;
-};
-
 app.use(express.json());
 app.use(requestLogger);
+
 morgan.token("body", (req, res) => JSON.stringify(req.body));
 app.use(morgan(":method :url :status :response-time ms :body"));
 
@@ -135,10 +88,15 @@ app.put("/api/notes/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.get("/info", (req, res) => {
+app.get("/info", (req, res, next) => {
   const date = new Date();
-  const entries = persons.length;
-  res.send(`<h3>Phonebook has info for ${entries} people <br> ${date}</h3>`);
+  Person.find({})
+    .then((result) =>
+      res.send(
+        `<h3>Phonebook has info for ${result.length} people <br> ${date}</h3>`
+      )
+    )
+    .catch((err) => next(err));
 });
 
 app.get("/api/persons", (req, res, next) => {
@@ -155,11 +113,7 @@ app.get("/api/persons/:id", (req, res, next) => {
     })
     .catch((err) => next(err));
 });
-app.delete("/api/persons/:id", (req, res, next) => {
-  Person.findByIdAndDelete(req.params.id)
-    .then((result) => res.status(204).end())
-    .catch((err) => next(err));
-});
+
 app.post("/api/persons", (req, res, next) => {
   if (!req.body.number || !req.body.name) {
     return res.status(400).json({ error: "name or number is missing" });
@@ -172,6 +126,21 @@ app.post("/api/persons", (req, res, next) => {
     .save()
     .then((savedContact) => res.json(savedContact))
     .catch((err) => next(err));
+});
+
+app.delete("/api/persons/:id", (req, res, next) => {
+  Person.findByIdAndDelete(req.params.id)
+    .then((result) => res.status(204).end())
+    .catch((err) => next(err));
+});
+
+app.put("/api/persons/:id", (req, res, next) => {
+  Person.findByIdAndUpdate(req.params.id, req.body, { new: true }).then(
+    (result) => {
+      res.json(result);
+      console.log(result);
+    }
+  );
 });
 
 const unknownEndpoint = (request, response) => {
