@@ -107,7 +107,7 @@ app.get("/api/persons", (req, res, next) => {
     .catch((err) => next(err));
 });
 app.get("/api/persons/:id", (req, res, next) => {
-  const person = Person.findById(req.params.id)
+  Person.findById(req.params.id)
     .then((person) => {
       person ? res.json(person) : res.status(404).end();
     })
@@ -130,7 +130,10 @@ app.post("/api/persons", (req, res, next) => {
 
 app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
-    .then((result) => res.status(204).end())
+    .then((result) => {
+      res.json(result);
+      res.status(204).end();
+    })
     .catch((err) => next(err));
 });
 

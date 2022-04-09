@@ -28,22 +28,19 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setnewNumber] = useState("");
   const [filtered, setFiltered] = useState(persons);
-  const [deleted, setDeleted] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [confirmMessage, setConfirmMessage] = useState(null);
   useEffect(() => {
     setFiltered(persons);
-  }, [persons, deleted]);
+  }, [persons]);
   useEffect(() => {
     backEndLogic.getAll().then((res) => setPersons(res));
-  }, [deleted]);
-  useEffect(() => {});
+  }, []);
 
   const filterHandler = (event) => {
     const char = event.target.value;
     setFiltered(Searching(char, persons));
   };
-  const contactsRefresher = () => setDeleted(!deleted);
 
   const addPerson = (event) => {
     //adds a person if the string is not empty and uses isContact function to check if name in newName exist
@@ -58,13 +55,18 @@ const App = () => {
           `${newName} already added to phonebook. Replace the old number with a new one?`
         )
       ) {
-        backEndLogic.modify(existing_contact.id, {
-          ...existing_contact,
-          number: newNumber,
-        });
+        backEndLogic
+          .modify(existing_contact.id, {
+            ...existing_contact,
+            number: newNumber,
+          })
+          .then((res) =>
+            setPersons(
+              persons.filter((person) => person.id !== res.id).concat(res)
+            )
+          );
         setNewName("");
         setnewNumber("");
-        setDeleted(!deleted);
         setConfirmMessage(`Contact has succesfully been updated`);
         setTimeout(() => {
           setConfirmMessage(null);
@@ -82,7 +84,6 @@ const App = () => {
       //clear input and display the message
       setNewName("");
       setnewNumber("");
-      setDeleted(!deleted);
       setConfirmMessage(`Contact has succesfully been added`);
       setTimeout(() => {
         setConfirmMessage(null);
@@ -108,10 +109,11 @@ const App = () => {
     }
     backEndLogic
       .deleteContact(id)
-      .then((res) => console.log(res))
+      .then((res) =>
+        setPersons(persons.filter((person) => person.id !== res.id))
+      )
       .catch((e) => {
         console.log(e);
-        setDeleted(!deleted);
         setErrorMessage(
           `information on ${name} has already been removed from server`
         );
@@ -119,8 +121,6 @@ const App = () => {
           setErrorMessage(null);
         }, 5000);
       });
-
-    contactsRefresher();
   };
 
   return (
