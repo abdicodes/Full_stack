@@ -14,4 +14,4 @@ blogsRouter.post('/', (req, res) => {
     res.status(201).json(result)
   })
 })
-module.export = blogsRouter
+module.exports = blogsRouter
