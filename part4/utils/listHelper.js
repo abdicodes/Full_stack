@@ -3,10 +3,14 @@ const dummy = (blogs) => {
 }
 const totalLikes = (blogs) => {
   return blogs.reduce((sum, blog) => {
-    return sum + blog.likes
+    sum + blog.likes
   }, 0)
+}
+const favoriteBlog = (blogs) => {
+  return blogs.reduce((iMax, x) => (x.likes > iMax.likes ? x : iMax), blogs[0])
 }
 module.exports = {
   dummy,
   totalLikes,
+  favoriteBlog,
 }
