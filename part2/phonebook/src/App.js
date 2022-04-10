@@ -60,17 +60,25 @@ const App = () => {
             ...existing_contact,
             number: newNumber,
           })
-          .then((res) =>
+          .then((res) => {
             setPersons(
               persons.filter((person) => person.id !== res.id).concat(res)
-            )
-          );
-        setNewName("");
-        setnewNumber("");
-        setConfirmMessage(`Contact has succesfully been updated`);
-        setTimeout(() => {
-          setConfirmMessage(null);
-        }, 5000);
+            );
+            setNewName("");
+            setnewNumber("");
+            setConfirmMessage(`Contact has succesfully been updated`);
+            setTimeout(() => {
+              setConfirmMessage(null);
+            }, 4000);
+          })
+          .catch((error) => {
+            setErrorMessage(error.response.data.error);
+            setNewName("");
+            setnewNumber("");
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 4000);
+          });
       }
       // logic to add a new contact using POST
     } else {
@@ -79,15 +87,23 @@ const App = () => {
           name: newName,
           number: newNumber,
         })
-        .then((res) => setPersons(persons.concat(res)));
-
-      //clear input and display the message
-      setNewName("");
-      setnewNumber("");
-      setConfirmMessage(`Contact has succesfully been added`);
-      setTimeout(() => {
-        setConfirmMessage(null);
-      }, 5000);
+        .then((res) => {
+          setPersons(persons.concat(res));
+          setNewName("");
+          setnewNumber("");
+          setConfirmMessage(`Contact has succesfully been added`);
+          setTimeout(() => {
+            setConfirmMessage(null);
+          }, 4000);
+        })
+        .catch((error) => {
+          setErrorMessage(error.response.data.error);
+          setNewName("");
+          setnewNumber("");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 4000);
+        });
     }
   };
   const nameInputHandler = (e) => {
@@ -109,9 +125,13 @@ const App = () => {
     }
     backEndLogic
       .deleteContact(id)
-      .then((res) =>
-        setPersons(persons.filter((person) => person.id !== res.id))
-      )
+      .then((res) => {
+        setPersons(persons.filter((person) => person.id !== res.id));
+        setConfirmMessage(`${name} has succesfully been removed`);
+        setTimeout(() => {
+          setConfirmMessage(null);
+        }, 4000);
+      })
       .catch((e) => {
         console.log(e);
         setErrorMessage(
@@ -119,7 +139,7 @@ const App = () => {
         );
         setTimeout(() => {
           setErrorMessage(null);
-        }, 5000);
+        }, 4000);
       });
   };
 
