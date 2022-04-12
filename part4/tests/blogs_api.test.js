@@ -52,21 +52,32 @@ test('an input with no likes property should have 0 likes', async () => {
   expect(blogsAtEnd.at(-1).likes).toBe(0)
 })
 
-test('notes are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+test('an input with no title and url properties is not added to DB', async () => {
+  const newBlog = {
+    author: 'chalres',
+
+    likes: 10,
+  }
+
+  const postBlog = await api.post('/api/blogs').send(newBlog)
+  expect(postBlog.status).toEqual(400)
+}, 10000)
+
+test('blogs are returned as json and status 200', async () => {
+  const getRequest = await api.get('/api/blogs')
+
+  expect(getRequest.type).toEqual('application/json')
+  expect(getRequest.status).toEqual(200)
 })
 
 test('there are two blogs', async () => {
-  const response = await api.get('/api/blogs')
+  const blogsAtEnd = await helper.blogsInDb()
 
-  expect(response.body).toHaveLength(2)
+  expect(blogsAtEnd).toHaveLength(2)
 })
 test('id property is defined', async () => {
-  const response = await api.get('/api/blogs')
-  expect(response.body[0].id).toBeDefined()
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd[0].id).toBeDefined()
 })
 afterAll(() => {
   mongoose.connection.close()
