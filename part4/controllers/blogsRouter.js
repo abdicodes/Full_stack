@@ -39,7 +39,7 @@ blogsRouter.put('/:id', (req, res) => {
   console.log(blog)
 
   Blog.findByIdAndUpdate(req.params.id, blog, { new: true }).then(
-    (updatedBlog) => res.json(updatedBlog)
+    (updatedBlog) => res.status(201).json(updatedBlog)
   )
 })
 module.exports = blogsRouter

@@ -126,10 +126,10 @@ describe('for blog modification', () => {
     const id = blogs[0].id
     const myReq = await api
       .put(`/api/blogs/${id}`)
-      .send({ ...blogs[0], likes: 400 })
-    const blog = myReq.response
+      .send({ ...blogs[0], likes: 20 })
+    const blog = myReq.body
     expect(myReq.status).toEqual(201)
-    expect(blog.likes).toEqual(400)
+    expect(blog.likes).toEqual(20)
   })
 })
 afterAll(() => {
