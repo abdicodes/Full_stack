@@ -120,6 +120,18 @@ describe('for blog deletion', () => {
     expect(myReq.status).toEqual(400)
   })
 })
+describe('for blog modification', () => {
+  test(' modifying valid blog should return status 201', async () => {
+    const blogs = await helper.blogsInDb()
+    const id = blogs[0].id
+    const myReq = await api
+      .put(`/api/blogs/${id}`)
+      .send({ ...blogs[0], likes: 400 })
+    const blog = myReq.response
+    expect(myReq.status).toEqual(201)
+    expect(blog.likes).toEqual(400)
+  })
+})
 afterAll(() => {
   mongoose.connection.close()
 })
