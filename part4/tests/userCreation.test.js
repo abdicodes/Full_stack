@@ -20,7 +20,7 @@ describe('when there is initially one user in db', () => {
     const newUser = {
       username: 'mluukkai',
       name: 'Matti Luukkainen',
-      password: 'salainen',
+      password: 'Salainen1',
     }
 
     await api
@@ -34,5 +34,24 @@ describe('when there is initially one user in db', () => {
 
     const usernames = usersAtEnd.map((u) => u.username)
     expect(usernames).toContain(newUser.username)
+  })
+
+  test('creation fails if username or password length is less than 3 character', async () => {
+    const newUser = {
+      username: 'ml',
+      name: 'Matti Luukkainen',
+      password: 'Salainen1',
+    }
+
+    await api.post('/api/users').send(newUser).expect(400)
+  })
+  test('creation fails if password does not contain lowercase, uppercase and a digit', async () => {
+    const newUser = {
+      username: 'mluukkai',
+      name: 'Matti Luukkainen',
+      password: 'Salaine',
+    }
+
+    await api.post('/api/users').send(newUser).expect(400)
   })
 })

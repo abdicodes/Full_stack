@@ -1,13 +1,24 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/users')
-
+const helper = require('../utils/newUserHelper')
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('blogs', {
+    likes: 1,
+    author: 1,
+    url: 1,
+    title: 1,
+  })
   res.status(200).json(users)
 })
 usersRouter.post('/', async (req, res) => {
   const { username, name, password } = req.body
+  if (!helper(username, password)) {
+    return res.status(400).json({
+      error:
+        'password must be at least 3 characters and must have lowercase letter, capital case letter and a digit',
+    })
+  }
 
   const existingUser = await User.findOne({ username })
   if (existingUser) {

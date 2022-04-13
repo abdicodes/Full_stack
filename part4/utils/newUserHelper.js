@@ -1,15 +1,11 @@
-const newUserHelper = (username, pass, res) => {
+const newUserHelper = (username, pass) => {
   if (username.length < 3) {
-    res
-      .status(400)
-      .json({ error: 'username  must be at least of 3 characters' })
+    return false
   }
-  const strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})')
+  const strongRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{3,})')
   if (!strongRegex.test(pass)) {
-    res.status(400).json({
-      error:
-        'password must be at least 6 characters and must have lowercase letter, capital case letter and a digit',
-    })
+    return false
   }
+  return true
 }
 module.exports = newUserHelper
