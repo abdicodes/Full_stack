@@ -1,8 +1,8 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blogs')
 const User = require('../models/users')
+const middleware = require('../utils/middleware')
 require('express-async-errors')
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -10,15 +10,9 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs)
 })
 
-blogsRouter.post('/', async (req, res) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token missing or invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
+blogsRouter.post('/', middleware.userExtractor, async (req, res) => {
+  const user = req.user
 
-  console.log(user)
-  console.log(req.body)
   const blog = new Blog({
     title: req.body.title,
     author: req.body.author,
@@ -39,12 +33,17 @@ blogsRouter.get('/:id', async (req, res) => {
     ? res.json(blog)
     : res.status(404).json({ error: 'blog cannot be found' })
 })
-blogsRouter.delete('/:id', async (req, res) => {
-  const blog = await Blog.findByIdAndDelete(req.params.id)
+blogsRouter.delete('/:id', middleware.userExtractor, async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+  if (!blog) {
+    res.status(404).json({ error: 'blog cannot be found' })
+  }
 
-  blog
-    ? res.status(204).end()
-    : res.status(404).json({ error: 'blog cannot be found' })
+  if (!(blog.user.toString() === req.user.id.toString())) {
+    return res.status(400).json({ error: 'unauthorized action! ' })
+  }
+  await Blog.findByIdAndDelete(req.params.id)
+  res.status(204).end()
 })
 blogsRouter.put('/:id', async (req, res) => {
   const user = await User.findById(req.body.userId)
