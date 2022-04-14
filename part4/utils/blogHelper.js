@@ -15,6 +15,20 @@ const initialBlogs = [
     likes: 100000,
   },
 ]
+const tokenGen = async (api) => {
+  await User.deleteMany({})
+  const user = await api
+    .post('/api/users')
+    .send({ name: 'test', username: 'test', password: 'Somali123' })
+  const token = await api
+    .post('/api/login')
+    .send({ username: 'test', password: 'Somali123' })
+  const test = await User.findById(user.body.id)
+
+  console.log(test)
+
+  return { token: token.body.token, id: test._id }
+}
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
@@ -42,4 +56,5 @@ module.exports = {
   blogsInDb,
   nonExistingId,
   usersInDb,
+  tokenGen,
 }

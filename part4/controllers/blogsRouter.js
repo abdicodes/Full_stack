@@ -6,7 +6,6 @@ require('express-async-errors')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
-  console.log(blogs)
   res.json(blogs)
 })
 
@@ -40,14 +39,14 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (req, res) => {
   }
 
   if (!(blog.user.toString() === req.user.id.toString())) {
-    return res.status(400).json({ error: 'unauthorized action! ' })
+    return res.status(401).json({ error: 'unauthorized action! ' })
   }
   await Blog.findByIdAndDelete(req.params.id)
   res.status(204).end()
 })
 blogsRouter.put('/:id', async (req, res) => {
   const user = await User.findById(req.body.userId)
-  console.log(req.body)
+
   const blog = {
     title: req.body.title,
     author: req.body.author,
@@ -55,7 +54,6 @@ blogsRouter.put('/:id', async (req, res) => {
     likes: req.body.likes,
     user: user._id,
   }
-  console.log(blog)
 
   Blog.findByIdAndUpdate(req.params.id, blog, { new: true }).then(
     (updatedBlog) => res.status(201).json(updatedBlog)
