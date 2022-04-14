@@ -2,11 +2,13 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blogs')
+const User = require('../models/users')
 const helper = require('../utils/blogHelper')
 
 const api = supertest(app)
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
 
   const blogObject = helper.initialBlogs.map((blog) => new Blog(blog))
   const promiseArray = blogObject.map((blog) => blog.save())
@@ -32,21 +34,36 @@ beforeEach(async () => {
 // })
 
 describe('when adding new notes', () => {
-  test('a valid blog can be added', async () => {
-    // const user = await api.post('/api/')
+  test('request with invalid token should fail with error 401', async () => {
+    const user = await helper.tokenGen(api)
+    const invalidToken = helper.nonExistingToken(api)
+    const newBlog = {
+      title: 'missing valid token',
+      author: 'chalres',
+      url: 'google.com',
+      user: user.id,
+      likes: 300,
+    }
 
-    const token = await helper.tokenGen(api)
+    const myReq = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${invalidToken}`)
+      .send(newBlog)
+    expect(myReq.status).toEqual(401)
+  })
+  test('a valid blog can be added', async () => {
+    const user = await helper.tokenGen(api)
     const newBlog = {
       title: 'to be or not to be',
       author: 'chalres',
       url: 'google.com',
       likes: 250,
-      user: token.id,
+      user: user.id,
     }
-    console.log(newBlog)
+
     await api
       .post('/api/blogs')
-      .set('Authorization', `bearer ${token.token}`)
+      .set('Authorization', `bearer ${user.token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -114,36 +131,55 @@ describe('view of a single blog', () => {
     expect(myReq.status).toEqual(400)
   })
 })
-// describe('for blog deletion', () => {
-//   test(' success with code 204 if ID is valid', async () => {
-//     const blogs = await helper.blogsInDb()
-//     const id = blogs[0].id
-//     const myReq = await api.delete(`/api/blogs/${id}`)
-//     expect(myReq.status).toEqual(204)
-//   })
-//   test('fails with code 404 if ID does not exist', async () => {
-//     const nonExistingID = await helper.nonExistingId()
-//     const myReq = await api.delete(`/api/blogs/${nonExistingID}`)
-//     expect(myReq.status).toEqual(404)
-//   })
-//   test('fails with code 400 if ID is invalid', async () => {
-//     const invalidId = '1234567899'
-//     const myReq = await api.delete(`/api/blogs/${invalidId}`)
-//     expect(myReq.status).toEqual(400)
-//   })
-// })
-// describe('for blog modification', () => {
-//   test(' modifying valid blog should return status 201', async () => {
-//     const blogs = await helper.blogsInDb()
-//     const id = blogs[0].id
-//     const myReq = await api
-//       .put(`/api/blogs/${id}`)
-//       .send({ ...blogs[0], likes: 20 })
-//     const blog = myReq.body
-//     expect(myReq.status).toEqual(201)
-//     expect(blog.likes).toEqual(20)
-//   })
-// })
+describe('for blog deletion', () => {
+  test(' success with code 204 if ID is valid', async () => {
+    const user = await helper.tokenGen(api)
+    const newBlog = {
+      title: 'to be deleted',
+      author: 'chalres',
+      url: 'google.com',
+      likes: 250,
+      user: user.id,
+    }
+
+    const blog = await api
+      .post('/api/blogs')
+      .set('Authorization', `bearer ${user.token}`)
+      .send(newBlog)
+
+    const myReq = await api
+      .delete(`/api/blogs/${blog.body.id}`)
+      .set('Authorization', `bearer ${user.token}`)
+
+    expect(myReq.status).toEqual(204)
+  })
+  test('fails with code 404 if ID does not exist', async () => {
+    const user = await helper.tokenGen(api)
+    const nonExistingID = await helper.nonExistingId()
+    const myReq = await api
+      .delete(`/api/blogs/${nonExistingID}`)
+      .set('Authorization', `bearer ${user.token}`)
+    expect(myReq.status).toEqual(404)
+  })
+  test('fails with code 400 if ID is invalid', async () => {
+    const user = await helper.tokenGen(api)
+    const invalidId = '1234567899'
+    const myReq = await api
+      .delete(`/api/blogs/${invalidId}`)
+      .set('Authorization', `bearer ${user.token}`)
+    expect(myReq.status).toEqual(400)
+  })
+})
+describe('for blog modification', () => {
+  test(' modifying valid blog should return status 201', async () => {
+    const blogs = await helper.blogsInDb()
+    const blog = blogs[0]
+    blog.likes = 20
+    const myReq = await api.put(`/api/blogs/${blog.id}`).send(blog)
+    expect(myReq.status).toEqual(201)
+    expect(myReq.body.likes).toEqual(20)
+  })
+})
 afterAll(() => {
   mongoose.connection.close()
 })

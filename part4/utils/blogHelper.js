@@ -15,17 +15,15 @@ const initialBlogs = [
     likes: 100000,
   },
 ]
-const tokenGen = async (api) => {
-  await User.deleteMany({})
-  const user = await api
-    .post('/api/users')
-    .send({ name: 'test', username: 'test', password: 'Somali123' })
-  const token = await api
-    .post('/api/login')
-    .send({ username: 'test', password: 'Somali123' })
-  const test = await User.findById(user.body.id)
 
-  console.log(test)
+const initialUsers = [
+  { name: 'test1', username: 'test1', password: 'Somali123' },
+  { name: 'test2', username: 'test', password: 'Somali123' },
+]
+const tokenGen = async (api) => {
+  const user = await api.post('/api/users').send(initialUsers[0])
+  const token = await api.post('/api/login').send(initialUsers[0])
+  const test = await User.findById(user.body.id)
 
   return { token: token.body.token, id: test._id }
 }
@@ -51,10 +49,25 @@ const nonExistingId = async () => {
 
   return blog._id.toString()
 }
+const nonExistingToken = async (api) => {
+  const user = new User({
+    username: 'sam',
+    name: 'sam',
+    password: 'Somali12345',
+  })
+  await user.save()
+  const foo = await api.post('/api/login').send(user)
+  await user.remove()
+  const testing = await User.find({})
+  console.log(testing)
+  return foo.body.token
+}
 module.exports = {
   initialBlogs,
   blogsInDb,
   nonExistingId,
   usersInDb,
   tokenGen,
+  initialUsers,
+  nonExistingToken,
 }

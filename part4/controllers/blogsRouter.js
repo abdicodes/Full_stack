@@ -1,6 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blogs')
-const User = require('../models/users')
 const middleware = require('../utils/middleware')
 require('express-async-errors')
 
@@ -11,7 +10,6 @@ blogsRouter.get('/', async (req, res) => {
 
 blogsRouter.post('/', middleware.userExtractor, async (req, res) => {
   const user = req.user
-
   const blog = new Blog({
     title: req.body.title,
     author: req.body.author,
@@ -45,17 +43,15 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (req, res) => {
   res.status(204).end()
 })
 blogsRouter.put('/:id', async (req, res) => {
-  const user = await User.findById(req.body.userId)
-
-  const blog = {
+  const newBlog = {
     title: req.body.title,
     author: req.body.author,
     url: req.body.url,
     likes: req.body.likes,
-    user: user._id,
+    user: req.user,
   }
 
-  Blog.findByIdAndUpdate(req.params.id, blog, { new: true }).then(
+  Blog.findByIdAndUpdate(req.params.id, newBlog, { new: true }).then(
     (updatedBlog) => res.status(201).json(updatedBlog)
   )
 })
