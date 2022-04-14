@@ -4,7 +4,6 @@ const User = require('../models/users')
 const helper = require('../utils/newUserHelper')
 usersRouter.get('/', async (req, res) => {
   const users = await User.find({}).populate('blogs', {
-    likes: 1,
     author: 1,
     url: 1,
     title: 1,
