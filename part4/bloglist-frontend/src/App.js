@@ -7,6 +7,9 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [author, setAuthor] = useState('')
+  const [title, setTitle] = useState('')
+  const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -30,6 +33,7 @@ const App = () => {
         password,
       })
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -40,6 +44,55 @@ const App = () => {
       }, 5000)
     }
   }
+  const blogFormHandler = async (event) => {
+    event.preventDefault()
+    try {
+      const create = await blogService.create({
+        title: title,
+        author: author,
+        url: url,
+      })
+
+      setAuthor('')
+      setTitle('')
+      setUrl('')
+      setBlogs(() => blogs.concat(create))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const createBlogForm = () => (
+    <form onSubmit={blogFormHandler}>
+      <div>
+        title
+        <input
+          type="text"
+          value={title}
+          name="title"
+          onChange={({ target }) => setTitle(target.value)}
+        />
+      </div>
+      <div>
+        author
+        <input
+          type="text"
+          value={author}
+          name="author"
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+      </div>
+      <div>
+        URL
+        <input
+          type="text"
+          value={url}
+          name="url"
+          onChange={({ target }) => setUrl(target.value)}
+        />
+      </div>
+      <button type="submit">submit</button>
+    </form>
+  )
   const logout = () => {
     window.localStorage.removeItem('loggedNoteappUser')
     setUser(null)
@@ -78,6 +131,7 @@ const App = () => {
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
+          <div>{createBlogForm()}</div>
         </div>
       ) : (
         <div>
