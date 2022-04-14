@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/notifications'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +13,7 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [confirmMessage, setConfirmMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -38,6 +40,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
+      console.log(exception)
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
@@ -57,9 +60,11 @@ const App = () => {
       setTitle('')
       setUrl('')
       setBlogs(() => blogs.concat(create))
-    } catch (error) {
-      console.log(error)
-    }
+      setConfirmMessage(`${create.title} by ${create.author} is added!`)
+      setTimeout(() => {
+        setConfirmMessage(null)
+      }, 5000)
+    } catch (error) {}
   }
   const createBlogForm = () => (
     <form onSubmit={blogFormHandler}>
@@ -126,6 +131,7 @@ const App = () => {
       {user !== null ? (
         <div>
           <h2>blogs</h2>
+          <Notification message={confirmMessage} color="green" />
           <p>{user.name} has logged in</p>{' '}
           <button onClick={logout}>logout</button>
           {blogs.map((blog) => (
@@ -136,6 +142,7 @@ const App = () => {
       ) : (
         <div>
           <h2>Login in to application</h2>
+          <Notification message={errorMessage} color="red" />
           {loginForm()}
         </div>
       )}
