@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 const Blog = ({ blog, newLike, user, removeBlog }) => {
   const [view, setView] = useState(false)
   const blogStyle = {
@@ -12,7 +13,7 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
     event.preventDefault()
     setView(!view)
   }
-  const text = { text: view ? 'hide' : 'view' }
+  const buttonText = { text: view ? 'hide' : 'view' }
   const addLikes = (event) => {
     event.preventDefault()
     const myObject = {
@@ -26,7 +27,7 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
     newLike(myObject)
   }
   const deleteBlog = () => {
-    const popUp = window.confirm(`are you sure you want to delete the blog`)
+    const popUp = window.confirm('are you sure you want to delete the blog')
     if (popUp) {
       removeBlog(blog.id)
     }
@@ -35,12 +36,8 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
   return (
     <div style={blogStyle}>
       <p>
-        {blog.title} <button onClick={viewHandler}> {text.text}</button>
+        {blog.title} <button onClick={viewHandler}> {buttonText.text}</button>
       </p>
-
-      {/* {view && id === blog.user.id && (
-        <button onClick={deleteBlog}>delete</button>
-      )} */}
 
       {view && (
         <>
@@ -57,5 +54,11 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
       )}
     </div>
   )
+}
+Blog.propTypes = {
+  removeBlog: PropTypes.func.isRequired,
+  blog: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  newLike: PropTypes.func.isRequired,
 }
 export default Blog

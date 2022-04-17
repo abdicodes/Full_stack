@@ -76,7 +76,7 @@ const App = () => {
     try {
       await blogService.deleteBlog(id)
       setBlogs(blogs.filter((blog) => blog.id !== id))
-      setConfirmMessage(`blog has successfuly been deleted`)
+      setConfirmMessage('blog has successfuly been deleted')
       setTimeout(() => {
         setConfirmMessage(null)
       }, 5000)
