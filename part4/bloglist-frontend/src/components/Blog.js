@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, newLike }) => {
+const Blog = ({ blog, newLike, user, removeBlog }) => {
   const [view, setView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -25,19 +25,36 @@ const Blog = ({ blog, newLike }) => {
     }
     newLike(myObject)
   }
+  const deleteBlog = () => {
+    const popUp = window.confirm(`are you sure you want to delete the blog`)
+    if (popUp) {
+      removeBlog(blog.id)
+    }
+  }
 
   return (
     <div style={blogStyle}>
       <p>
         {blog.title} <button onClick={viewHandler}> {text.text}</button>
       </p>
-      {view && <p>{blog.url}</p>}
+
+      {/* {view && id === blog.user.id && (
+        <button onClick={deleteBlog}>delete</button>
+      )} */}
+
       {view && (
-        <p>
-          {blog.likes} <button onClick={addLikes}>likes</button>
-        </p>
+        <>
+          {' '}
+          <p>{blog.url}</p>
+          <p>
+            {blog.likes} <button onClick={addLikes}>likes</button>
+          </p>
+          <p>{blog.author}</p>
+          {user.id === blog.user.id && (
+            <button onClick={deleteBlog}>delete</button>
+          )}
+        </>
       )}
-      {view && <p>{blog.author}</p>}
     </div>
   )
 }

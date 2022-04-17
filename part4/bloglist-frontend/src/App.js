@@ -31,6 +31,7 @@ const App = () => {
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
+      console.log(user)
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
@@ -53,6 +54,21 @@ const App = () => {
       }, 5000)
     } catch ({ response }) {
       setErrorMessage(response.data.error)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+  const removeBlog = async (id) => {
+    try {
+      await blogService.deleteBlog(id)
+      setBlogs(blogs.filter((blog) => blog.id !== id))
+      setConfirmMessage(`blog has successfuly been deleted`)
+      setTimeout(() => {
+        setConfirmMessage(null)
+      }, 5000)
+    } catch (error) {
+      setErrorMessage(error.response.data.error)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -84,7 +100,13 @@ const App = () => {
               a.likes < b.likes ? 1 : a.likes > b.likes ? -1 : 0
             )
             .map((blog) => (
-              <Blog key={blog.id} blog={blog} newLike={addNewLike} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                newLike={addNewLike}
+                user={user}
+                removeBlog={removeBlog}
+              />
             ))}
           <Togglable buttonLabel={'new blog'}>
             {' '}
