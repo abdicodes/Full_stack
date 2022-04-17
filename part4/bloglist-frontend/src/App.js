@@ -15,7 +15,21 @@ const App = () => {
   const [confirmMessage, setConfirmMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((blogs) =>
+      setBlogs(
+        blogs.map(
+          (blog) =>
+            (blog = {
+              author: blog.author,
+              title: blog.title,
+              id: blog.id,
+              likes: blog.likes,
+              url: blog.url,
+              user: blog.user.id,
+            })
+        )
+      )
+    )
   }, [])
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
@@ -31,7 +45,6 @@ const App = () => {
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      console.log(user)
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
