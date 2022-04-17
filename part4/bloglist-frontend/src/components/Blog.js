@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog }) => {
+const Blog = ({ blog, newLike }) => {
   const [view, setView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -8,28 +8,33 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5,
   }
-  const viewHandler = (e) => {
-    e.preventDefault()
+  const viewHandler = (event) => {
+    event.preventDefault()
     setView(!view)
-    console.log(e.target)
   }
-  const text = () => {
-    if (view) {
-      return 'hide'
-    } else {
-      return 'view'
+  const text = { text: view ? 'hide' : 'view' }
+  const addLikes = (event) => {
+    event.preventDefault()
+    const myObject = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes + 1,
+      user: blog.user.id,
+      id: blog.id,
     }
+    newLike(myObject)
   }
 
   return (
     <div style={blogStyle}>
       <p>
-        {blog.title} <button onClick={viewHandler}> {text()}</button>
+        {blog.title} <button onClick={viewHandler}> {text.text}</button>
       </p>
       {view && <p>{blog.url}</p>}
       {view && (
         <p>
-          {blog.likes} <button>likes</button>
+          {blog.likes} <button onClick={addLikes}>likes</button>
         </p>
       )}
       {view && <p>{blog.author}</p>}
