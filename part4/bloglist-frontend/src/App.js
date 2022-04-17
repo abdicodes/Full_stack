@@ -52,7 +52,6 @@ const App = () => {
         setConfirmMessage(null)
       }, 5000)
     } catch ({ response }) {
-      console.log(response.data.error)
       setErrorMessage(response.data.error)
       setTimeout(() => {
         setErrorMessage(null)
