@@ -79,9 +79,13 @@ const App = () => {
           <Notification message={errorMessage} color="red" />
           <p>{user.name} has logged in</p>{' '}
           <button onClick={logout}>logout</button>
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} newLike={addNewLike} />
-          ))}
+          {blogs
+            .sort((a, b) =>
+              a.likes < b.likes ? 1 : a.likes > b.likes ? -1 : 0
+            )
+            .map((blog) => (
+              <Blog key={blog.id} blog={blog} newLike={addNewLike} />
+            ))}
           <Togglable buttonLabel={'new blog'}>
             {' '}
             <BlogForm createBlog={blogFormHandler} />
