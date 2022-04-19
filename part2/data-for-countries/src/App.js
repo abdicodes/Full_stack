@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 /*this function will an array of countries as argument and compare each element of the array to a given string.
 if the string is in the country name it will push the element eventally return an array of all the partial or full matches 
 in case the string is empty it will return an empty array */
 const search = (array, char) => {
   if (char) {
-    const a = [];
+    const a = []
     array.forEach((element) => {
       if (element.name.toLowerCase().includes(char.toLowerCase())) {
-        a.push(element);
+        a.push(element)
       }
-    });
-    return a;
+    })
+    return a
   }
   // returns an empty array if the above condition is not met
-  return [];
-};
+  return []
+}
 
 /* this component returns a single country  */
 const Details = (props) => {
-  const country = props.country;
-  const weatherInfo = props.weatherInfo;
-  const status = props.status;
+  const country = props.country
+  const weatherInfo = props.weatherInfo
+  const status = props.status
 
   return (
     <div>
@@ -44,66 +44,66 @@ const Details = (props) => {
         <br />
         {status && weatherInfo.current.condition.text}
         <br />
-        <img src={status && weatherInfo.current.condition.icon} />
+        <img src={status && weatherInfo.current.condition.icon} alt="" />
         <br />
-        Wind: {status && weatherInfo.current.wind_mph} mph , direction{" "}
+        Wind: {status && weatherInfo.current.wind_mph} mph , direction{' '}
         {status && weatherInfo.current.wind_dir}
       </div>
     </div>
-  );
-};
+  )
+}
 const App = () => {
-  const [countries, setCountries] = useState([]);
-  const [countrySearch, setCountrySearch] = useState("");
-  const [searchList, setSearchList] = useState([]);
-  const [weather, setWeather] = useState(null);
-  const [countryDetails, setCountryDetails] = useState(null);
-  const [status, setStatus] = useState(false);
-  const api_key = process.env.REACT_APP_API_KEY;
+  const [countries, setCountries] = useState([])
+  const [countrySearch, setCountrySearch] = useState('')
+  const [searchList, setSearchList] = useState([])
+  const [weather, setWeather] = useState(null)
+  const [countryDetails, setCountryDetails] = useState(null)
+  const [status, setStatus] = useState(false)
+  const api_key = process.env.REACT_APP_API_KEY
 
   //API call to fetch countries data and save the data in the useState countries.
   useEffect(() => {
-    console.log("effect");
-    axios.get("https://restcountries.com/v2/all").then((response) => {
-      console.log("promise fulfilled");
-      setCountries(response.data);
-    });
-  }, []);
+    console.log('effect')
+    axios.get('https://restcountries.com/v2/all').then((response) => {
+      console.log('promise fulfilled')
+      setCountries(response.data)
+    })
+  }, [])
   //API call to fetch weather data from www.weatherapi.com
 
   useEffect(() => {
-    setSearchList(search(countries, countrySearch));
-  }, [countrySearch, countries]);
+    setSearchList(search(countries, countrySearch))
+  }, [countrySearch, countries])
   const eventHandler = (e) => {
-    setCountrySearch(e.target.value);
-  };
+    setCountrySearch(e.target.value)
+  }
   useEffect(() => {
-    setCountryDetails(null);
-    setStatus(false);
-  }, [countrySearch]);
+    setCountryDetails(null)
+    setStatus(false)
+  }, [countrySearch])
 
   useEffect(() => {
     if (countryDetails) {
-      console.log("not ready");
+      console.log('not ready')
 
       axios
         .get(
           `http://api.weatherapi.com/v1/current.json?key=${api_key}&q=${countryDetails.capital}&aqi=no`
         )
         .then((response) => {
-          setWeather(response.data);
-          setStatus(true);
-          console.log("Weather promise fulfilled");
-        });
+          setWeather(response.data)
+          setStatus(true)
+          console.log('Weather promise fulfilled')
+        })
     }
-  }, [countryDetails, api_key]);
+  }, [countryDetails, api_key])
 
   //this useEffect will check if a search result is equal to one and change the state of a single country details in order to display the details
   useEffect(() => {
     if (searchList.length === 1) {
-      setCountryDetails(searchList[0]);
+      setCountryDetails(searchList[0])
     }
-  }, [searchList]);
+  }, [searchList])
 
   // this component returns 10 or less countries upon search I defined it inside App as it is interacting with with the app state
   const CountryList = ({ countries }) => {
@@ -112,12 +112,12 @@ const App = () => {
         {countries.length <= 10 ? (
           countries.map((e, i) => (
             <div key={i}>
-              {e.name}{" "}
+              {e.name}{' '}
               <button
                 type="submit"
                 onClick={(event) => {
-                  event.preventDefault();
-                  setCountryDetails(e);
+                  event.preventDefault()
+                  setCountryDetails(e)
                 }}
               >
                 show
@@ -136,8 +136,8 @@ const App = () => {
           status={status}
         />
       </div>
-    );
-  };
+    )
+  }
   return (
     <div>
       <form>
@@ -158,7 +158,7 @@ const App = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
