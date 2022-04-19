@@ -34,7 +34,7 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       <p>
         {blog.title} <button onClick={viewHandler}> {buttonText.text}</button>
       </p>
