@@ -13,6 +13,7 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
     event.preventDefault()
     setView(!view)
   }
+
   const buttonText = { text: view ? 'hide' : 'view' }
   const addLikes = (event) => {
     event.preventDefault()
@@ -21,7 +22,7 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
       author: blog.author,
       url: blog.url,
       likes: blog.likes + 1,
-      user: blog.user.id,
+      user: blog.user,
       id: blog.id,
     }
     newLike(myObject)
