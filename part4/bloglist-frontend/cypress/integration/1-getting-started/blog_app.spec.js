@@ -72,6 +72,20 @@ describe('Blog app', function () {
         cy.get('#like-button').click()
         cy.get('#likes').should('contain', '1')
       })
+      it('A user can delete their blog', function () {
+        cy.contains('new blog').click()
+        cy.get('#title').type('test title')
+        cy.get('#author').type('test author')
+        cy.get('#url').type('www.test.com')
+        cy.get('#submit-blog').click()
+        cy.get('#view-hide-button').click()
+        cy.get('#delete-button').click()
+        cy.get('.blogs-list').should('not.contain', 'test title')
+        cy.get('.confirm').should(
+          'contain',
+          'blog has successfuly been deleted'
+        )
+      })
     })
   })
 })
