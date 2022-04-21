@@ -104,8 +104,12 @@ const App = () => {
       {user !== null ? (
         <div>
           <h2>blogs</h2>
-          <Notification message={confirmMessage} color="green" />
-          <Notification message={errorMessage} color="red" />
+          <Notification
+            message={confirmMessage}
+            color="green"
+            className="confirm"
+          />
+          <Notification message={errorMessage} color="red" className="error" />
           <p>{user.name} has logged in</p>{' '}
           <button onClick={logout}>logout</button>
           {blogs
