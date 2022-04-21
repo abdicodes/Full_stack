@@ -107,7 +107,7 @@ const App = () => {
           <Notification
             message={confirmMessage}
             color="green"
-            className="confirm"
+            className="confirms"
           />
           <Notification message={errorMessage} color="red" className="error" />
           <p>{user.name} has logged in</p>{' '}
