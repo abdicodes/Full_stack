@@ -107,24 +107,30 @@ const App = () => {
           <Notification
             message={confirmMessage}
             color="green"
-            className="confirms"
+            messageClass="confirm"
           />
-          <Notification message={errorMessage} color="red" className="error" />
+          <Notification
+            message={errorMessage}
+            color="red"
+            messageClass="error"
+          />
           <p>{user.name} has logged in</p>{' '}
           <button onClick={logout}>logout</button>
-          {blogs
-            .sort((a, b) =>
-              a.likes < b.likes ? 1 : a.likes > b.likes ? -1 : 0
-            )
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                newLike={addNewLike}
-                user={user}
-                removeBlog={removeBlog}
-              />
-            ))}
+          <div className="blogs-list">
+            {blogs
+              .sort((a, b) =>
+                a.likes < b.likes ? 1 : a.likes > b.likes ? -1 : 0
+              )
+              .map((blog) => (
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  newLike={addNewLike}
+                  user={user}
+                  removeBlog={removeBlog}
+                />
+              ))}
+          </div>
           <Togglable buttonLabel={'new blog'}>
             {' '}
             <BlogForm createBlog={blogFormHandler} />
@@ -133,7 +139,11 @@ const App = () => {
       ) : (
         <div>
           <h2>Login in to application</h2>
-          <Notification message={errorMessage} color="red" />
+          <Notification
+            message={errorMessage}
+            color="red"
+            messageClass="error"
+          />
           <Togglable buttonLabel={'login'}>
             <LoginForm loginUser={handleLogin} />
           </Togglable>

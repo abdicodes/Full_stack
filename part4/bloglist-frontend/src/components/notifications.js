@@ -1,4 +1,4 @@
-const Notification = ({ message, color }) => {
+const Notification = ({ message, color, messageClass }) => {
   const notifStyle = {
     color: color,
     background: 'lightgrey',
@@ -13,7 +13,7 @@ const Notification = ({ message, color }) => {
   }
 
   return (
-    <div className="error" style={notifStyle}>
+    <div className={messageClass} style={notifStyle}>
       {message}
     </div>
   )

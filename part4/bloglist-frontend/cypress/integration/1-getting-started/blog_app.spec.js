@@ -55,7 +55,11 @@ describe('Blog app', function () {
         cy.get('#author').type('test author')
         cy.get('#url').type('www.test.com')
         cy.get('#submit-blog').click()
-        cy.contains('test title by test author is added!')
+        cy.get('.confirm').should(
+          'contain',
+          'test title by test author is added!'
+        )
+        cy.get('.blogs-list').should('contain', 'test title')
       })
     })
   })
