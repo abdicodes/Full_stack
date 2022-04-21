@@ -60,6 +60,17 @@ describe('Blog app', function () {
           'test title by test author is added!'
         )
         cy.get('.blogs-list').should('contain', 'test title')
+        cy.get('.confirm').should('have.css', 'color', 'rgb(0, 128, 0)') // full green is actually lime
+      })
+      it('A user can like a blog', function () {
+        cy.contains('new blog').click()
+        cy.get('#title').type('test title')
+        cy.get('#author').type('test author')
+        cy.get('#url').type('www.test.com')
+        cy.get('#submit-blog').click()
+        cy.get('#view-hide-button').click()
+        cy.get('#like-button').click()
+        cy.get('#likes').should('contain', '1')
       })
     })
   })

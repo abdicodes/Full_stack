@@ -25,7 +25,7 @@ const App = () => {
               id: blog.id,
               likes: blog.likes,
               url: blog.url,
-              user: blog.user?.id,
+              user: blog.user.id,
             })
         )
       )

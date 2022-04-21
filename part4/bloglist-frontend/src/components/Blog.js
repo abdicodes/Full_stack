@@ -37,15 +37,22 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
   return (
     <div style={blogStyle} className="blog">
       <p>
-        {blog.title} <button onClick={viewHandler}> {buttonText.text}</button>
+        {blog.title}{' '}
+        <button id="view-hide-button" onClick={viewHandler}>
+          {' '}
+          {buttonText.text}
+        </button>
       </p>
 
       {view && (
         <>
           {' '}
           <p>{blog.url}</p>
-          <p>
-            {blog.likes} <button onClick={addLikes}>likes</button>
+          <p id="likes">
+            {blog.likes}{' '}
+            <button id="like-button" onClick={addLikes}>
+              likes
+            </button>
           </p>
           <p>{blog.author}</p>
           {user.id === blog.user && (
