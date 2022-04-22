@@ -1,3 +1,5 @@
+import login from '../../../src/services/login'
+
 describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -42,7 +44,13 @@ describe('Blog app', function () {
     describe('When logged in', function () {
       beforeEach(function () {
         const user = { name: 'abdi', username: 'abdi123', password: 'Test123' }
+        const user2 = {
+          name: 'stranger',
+          username: 'stranger123',
+          password: 'Test123',
+        }
         cy.request('POST', 'http://localhost:3003/api/users', user)
+        cy.request('POST', 'http://localhost:3003/api/users', user2)
         cy.contains('login').click()
         cy.get('#username').type('abdi123')
         cy.get('#password').type('Test123')
@@ -86,7 +94,22 @@ describe('Blog app', function () {
           'blog has successfuly been deleted'
         )
       })
-      it('A blog list is sorted by number of likes', async function () {
+
+      it.only('A user cannot delete blog created by others', function () {
+        cy.contains('new blog').click()
+        cy.get('#title').type('Abdis blog')
+        cy.get('#author').type('abdi')
+        cy.get('#url').type('www.test.com')
+        cy.get('#submit-blog').click()
+        cy.contains('logout').click()
+        cy.contains('login').click()
+        cy.get('#username').type('stranger123')
+        cy.get('#password').type('Test123')
+        cy.get('#submit-login').click()
+        cy.contains('view').click()
+        cy.get('.blog').should('not.contain', 'delete')
+      })
+      it('A blog list is sorted by number of likes', function () {
         cy.contains('new blog').click()
 
         cy.get('#title').type('title 1')
