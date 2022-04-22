@@ -38,7 +38,7 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
     <div style={blogStyle} className="blog">
       <p>
         {blog.title}{' '}
-        <button id="view-hide-button" onClick={viewHandler}>
+        <button className="view-hide-button" onClick={viewHandler}>
           {' '}
           {buttonText.text}
         </button>
@@ -48,15 +48,15 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
         <>
           {' '}
           <p>{blog.url}</p>
-          <p id="likes">
-            {blog.likes}{' '}
-            <button id="like-button" onClick={addLikes}>
+          <p className="likes">
+            <span className="likesNum"> {blog.likes}</span>{' '}
+            <button className="like-button" onClick={addLikes}>
               likes
             </button>
           </p>
           <p>{blog.author}</p>
           {user.id === blog.user && (
-            <button id="delete-button" onClick={deleteBlog}>
+            <button className="delete-button" onClick={deleteBlog}>
               delete
             </button>
           )}

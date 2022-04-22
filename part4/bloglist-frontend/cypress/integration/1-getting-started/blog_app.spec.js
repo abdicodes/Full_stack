@@ -68,9 +68,9 @@ describe('Blog app', function () {
         cy.get('#author').type('test author')
         cy.get('#url').type('www.test.com')
         cy.get('#submit-blog').click()
-        cy.get('#view-hide-button').click()
-        cy.get('#like-button').click()
-        cy.get('#likes').should('contain', '1')
+        cy.get('.view-hide-button').click()
+        cy.get('.like-button').click()
+        cy.get('.likes').should('contain', '1')
       })
       it('A user can delete their blog', function () {
         cy.contains('new blog').click()
@@ -78,13 +78,48 @@ describe('Blog app', function () {
         cy.get('#author').type('test author')
         cy.get('#url').type('www.test.com')
         cy.get('#submit-blog').click()
-        cy.get('#view-hide-button').click()
-        cy.get('#delete-button').click()
+        cy.get('.view-hide-button').click()
+        cy.get('.delete-button').click()
         cy.get('.blogs-list').should('not.contain', 'test title')
         cy.get('.confirm').should(
           'contain',
           'blog has successfuly been deleted'
         )
+      })
+      it('A blog list is sorted by number of likes', async function () {
+        cy.contains('new blog').click()
+
+        cy.get('#title').type('title 1')
+        cy.get('#author').type('test author')
+        cy.get('#url').type('www.test.com')
+        cy.get('#submit-blog').click()
+
+        cy.get('#title').type('title 2')
+        cy.get('#author').type('test author')
+        cy.get('#url').type('www.test.com')
+        cy.get('#submit-blog').click()
+
+        cy.get('#title').type('title 3')
+        cy.get('#author').type('test author')
+        cy.get('#url').type('www.test.com')
+        cy.get('#submit-blog').click()
+
+        cy.contains('title 1').parent().find('.view-hide-button').click()
+        cy.contains('likes').click()
+        cy.contains('likes').click()
+        cy.contains('hide').click()
+
+        cy.contains('title 2').parent().find('.view-hide-button').click()
+        cy.contains('likes').click()
+        cy.contains('likes').click()
+        cy.contains('likes').click()
+        cy.contains('likes').click()
+        cy.contains('view').click()
+        cy.contains('view').click()
+
+        cy.get('.blog').eq(0).should('contain', 'title 2')
+        cy.get('.blog').eq(1).should('contain', 'title 1')
+        cy.get('.blog').eq(2).should('contain', 'title 3')
       })
     })
   })
