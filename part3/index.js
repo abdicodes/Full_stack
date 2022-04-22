@@ -3,7 +3,6 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
-// const Note = require("./models/note");
 const Person = require('./models/persons')
 
 const requestLogger = (request, response, next) => {
@@ -31,57 +30,6 @@ app.use(requestLogger)
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :response-time ms :body'))
 
-// app.get('/api/notes', (request, response, next) => {
-//   Note.find({})
-//     .then((notes) => {
-//       response.json(notes)
-//     })
-//     .catch((error) => next(error))
-// })
-
-// app.get('/api/notes/:id', (request, response, next) => {
-//   Note.findById(request.params.id)
-//     .then((note) => {
-//       response.json(note)
-//     })
-//     .catch((error) => next(error))
-// })
-// app.post('/api/notes', (request, response, next) => {
-//   const body = request.body
-
-//   const note = new Note({
-//     content: body.content,
-//     important: body.important || false,
-//     date: new Date(),
-//   })
-
-//   note
-//     .save()
-//     .then((savedNote) => {
-//       response.json(savedNote)
-//     })
-//     .catch((error) => next(error))
-// })
-// app.delete('/api/notes/:id', (request, response, next) => {
-//   Note.findByIdAndRemove(request.params.id)
-//     .then((result) => {
-//       response.status(204).end()
-//     })
-//     .catch((error) => next(error))
-// })
-// app.put('/api/notes/:id', (request, response, next) => {
-//   const { content, important } = request.body
-
-//   Note.findByIdAndUpdate(
-//     request.params.id,
-//     { content, important },
-//     { new: true, runValidators: true, context: 'query' }
-//   )
-//     .then((updatedNote) => {
-//       response.json(updatedNote)
-//     })
-//     .catch((error) => next(error))
-// })
 app.get('/info', (req, res, next) => {
   const date = new Date()
   Person.find({})
