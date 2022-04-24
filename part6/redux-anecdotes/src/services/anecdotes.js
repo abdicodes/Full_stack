@@ -16,12 +16,11 @@ const create = async (anecdote) => {
 }
 
 const put = async (object) => {
-  console.log(object)
   const response = await axios.put(`${baseURL}/${object.id}`, {
     ...object,
     votes: object.votes + 1,
   })
-  console.log(response.data)
+
   return response.data
 }
 // eslint-disable-next-line import/no-anonymous-default-export

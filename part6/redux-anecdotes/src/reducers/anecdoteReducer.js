@@ -49,7 +49,7 @@ export const createAnecdote = (content) => {
 export const incrementVotes = (content) => {
   return async (dispatch) => {
     const incrementedAnecdote = await anecdotes.put(content)
-    console.log(incrementedAnecdote)
+
     dispatch(addVote(incrementedAnecdote))
   }
 }

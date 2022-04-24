@@ -12,7 +12,7 @@ const Notification = ({ notifications }) => {
   return notifications ? <div style={style}>{notifications}</div> : null
 }
 const mapStatetoProps = (state) => {
-  return { notifications: state.notifications }
+  return { notifications: state.notifications.message }
 }
 // export default Notification
 
