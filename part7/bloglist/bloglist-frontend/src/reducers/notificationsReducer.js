@@ -14,7 +14,6 @@ let timeOut = null
 
 export const createNotification = (notification) => {
   return (dispatch) => {
-    console.log(notification)
     dispatch(addNotification(notification))
     if (timeOut) {
       clearTimeout(timeOut)

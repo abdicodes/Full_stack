@@ -22,7 +22,10 @@ const create = async (newObject) => {
 }
 
 const modify = async (id, object) => {
-  const response = await axios.put(`${baseUrl}/${id}`, object)
+  const response = await axios.put(`${baseUrl}/${id}`, {
+    ...object,
+    likes: object.likes + 1,
+  })
   return response.data
 }
 const deleteBlog = async (id) => {
@@ -31,6 +34,7 @@ const deleteBlog = async (id) => {
   }
 
   const response = await axios.delete(`${baseUrl}/${id}`, config)
+
   return response
 }
 export default { getAll, create, setToken, modify, deleteBlog }

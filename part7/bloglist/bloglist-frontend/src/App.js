@@ -8,10 +8,15 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationsReducer'
-import { fetchBlogs, createBlog } from './reducers/blogsReducer'
+import {
+  fetchBlogs,
+  createBlog,
+  addLike,
+  deleteBlog,
+} from './reducers/blogsReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  // const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
@@ -68,8 +73,7 @@ const App = () => {
   }
   const removeBlog = async (id) => {
     try {
-      await blogService.deleteBlog(id)
-      setBlogs(blogs.filter((blog) => blog.id !== id))
+      dispatch(deleteBlog(id))
 
       dispatch(
         createNotification({
@@ -89,10 +93,7 @@ const App = () => {
     setUser(null)
   }
   const addNewLike = async (object) => {
-    const updatedBlog = await blogService.modify(object.id, object)
-    setBlogs(
-      blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
-    )
+    dispatch(addLike(object))
   }
 
   return (
