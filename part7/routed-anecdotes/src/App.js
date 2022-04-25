@@ -70,7 +70,6 @@ const Anecdote = ({ anecdote }) => {
   return (
     <div>
       <h1>
-        {' '}
         {anecdote.content} by {anecdote.author}{' '}
       </h1>
       <p> has {anecdote.votes} votes</p>
@@ -111,7 +110,17 @@ const CreateNew = (props) => {
           url for more info
           <input {...fieldInfo} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button
+          type="button"
+          onClick={() => {
+            fieldAuthor.onReset()
+            fieldContent.onReset()
+            fieldInfo.onReset()
+          }}
+        >
+          clear
+        </button>
       </form>
     </div>
   )
