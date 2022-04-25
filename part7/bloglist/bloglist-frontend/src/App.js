@@ -6,8 +6,9 @@ import Notification from './components/Notifications'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationsReducer'
+import { fetchBlogs, createBlog } from './reducers/blogsReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,23 +16,14 @@ const App = () => {
 
   const dispatch = useDispatch()
 
+  const blogList = useSelector((state) => state.blogs)
+
+  const sortedBlogs = [...blogList].sort((a1, a2) => a2.likes - a1.likes)
+
   useEffect(() => {
-    blogService.getAll().then((blogs) =>
-      setBlogs(
-        blogs.map(
-          (blog) =>
-            (blog = {
-              author: blog.author,
-              title: blog.title,
-              id: blog.id,
-              likes: blog.likes,
-              url: blog.url,
-              user: blog.user.id,
-            })
-        )
-      )
-    )
+    dispatch(fetchBlogs())
   }, [])
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
@@ -52,19 +44,19 @@ const App = () => {
       )
     }
   }
-  const blogFormHandler = async (blogObject) => {
+  const blogFormHandler = (blogObject) => {
     try {
-      const create = await blogService.create({
-        title: blogObject.title,
-        author: blogObject.author,
-        url: blogObject.url,
-      })
-
-      setBlogs(() => blogs.concat(create))
+      dispatch(
+        createBlog({
+          title: blogObject.title,
+          author: blogObject.author,
+          url: blogObject.url,
+        })
+      )
 
       dispatch(
         createNotification({
-          message: `${create.title} by ${create.author} is added!`,
+          message: `${blogObject.title} by ${blogObject.author} is added!`,
           color: 'green',
         })
       )
@@ -86,7 +78,6 @@ const App = () => {
         })
       )
     } catch (error) {
-      console.log(error)
       dispatch(
         createNotification({ message: error.response.data.error, color: 'red' })
       )
@@ -113,7 +104,7 @@ const App = () => {
           <p>{user.name} has logged in</p>{' '}
           <button onClick={logout}>logout</button>
           <div className="blogs-list">
-            {blogs
+            {sortedBlogs
               .sort((a, b) =>
                 a.likes < b.likes ? 1 : a.likes > b.likes ? -1 : 0
               )
