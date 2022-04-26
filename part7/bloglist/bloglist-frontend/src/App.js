@@ -4,15 +4,16 @@ import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import BlogList from './components/blogList'
-import UserBlogs from './UserBlogs'
+import UserBlogs from './components/UserBlogs'
 import Blog from './components/Blog'
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationsReducer'
 import { fetchBlogs, createBlog } from './reducers/blogsReducer'
-import { checkLocalstorage, logOut } from './reducers/userReducer'
+import { checkLocalstorage } from './reducers/userReducer'
 import { fetchAllUsers } from './reducers/usersReducer'
 import Users from './components/Users'
 import { Routes, Route } from 'react-router-dom'
+import NavBar from './components/NavBar'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -48,14 +49,11 @@ const App = () => {
     }
   }
 
-  const logout = () => {
-    dispatch(logOut())
-  }
-
   return (
     <>
       {user !== null ? (
         <div>
+          <NavBar user={user} />
           <h2>blogs</h2>
           <Notification />
           <p>{user.name} has logged in</p>
@@ -68,7 +66,6 @@ const App = () => {
             <Route path="/blogs/:id" element={<Blog />} />
           </Routes>
 
-          <button onClick={logout}>logout</button>
           <Togglable buttonLabel={'new blog'}>
             {' '}
             <BlogForm createBlog={blogFormHandler} />
