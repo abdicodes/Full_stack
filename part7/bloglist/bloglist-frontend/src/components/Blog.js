@@ -1,10 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { addLike, deleteBlog } from '../reducers/blogsReducer'
+import { addLike, deleteBlog, addComment } from '../reducers/blogsReducer'
 import { useMatch, useNavigate } from 'react-router-dom'
-import { useField } from '../hooks/index'
 
 const Blog = () => {
-  const formInput = useField('comment')
   const navigate = useNavigate()
   const match = useMatch('/blogs/:id')
   const blog = useSelector((state) =>
@@ -36,9 +34,11 @@ const Blog = () => {
   if (!blog || !user) {
     return null
   }
-  const addComment = (event) => {
+  const comment = (event) => {
     event.preventDefault()
-    console.log(formInput.value)
+    const comment = event.target.comment.value
+    event.target.comment.value = ''
+    dispatch(addComment(blog.id, comment))
   }
   return (
     <div style={blogStyle} className="blog">
@@ -64,14 +64,8 @@ const Blog = () => {
             <p key={i}>{comment}</p>
           ))}
         </ul>
-        <form onSubmit={addComment} id="add-comments">
-          <span>add a comment</span>
-          <input
-            type={formInput.type}
-            placeholder="add a comment"
-            value={formInput.value}
-            onChange={formInput.onChange}
-          />
+        <form onSubmit={comment} id="add-comments">
+          <input name="comment" type="text" placeholder="add a comment" />
           <button type="submit">add comment</button>
         </form>
       </div>

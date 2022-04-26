@@ -67,10 +67,17 @@ blogsRouter.put('/:id', async (req, res) => {
 })
 
 blogsRouter.post('/:id/comments', async (req, res) => {
-  const comment = req.body
+  const comment = req.body.comment
+  if (!comment) {
+    return res.status(401).json({ error: 'empty comment! ' })
+  }
+  console.log(comment)
+  console.log('=========')
   const blog = await Blog.findById(req.params.id)
-  blog.comments.concat(comment)
+  console.log(blog)
+  blog.comments = blog.comments.concat(comment)
   await blog.save()
+  console.log(blog)
   res.status(201).json(blog)
 })
 
