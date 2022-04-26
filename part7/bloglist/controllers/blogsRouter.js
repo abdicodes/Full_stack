@@ -35,6 +35,7 @@ blogsRouter.get('/:id', async (req, res) => {
     : res.status(404).json({ error: 'blog cannot be found' })
 })
 blogsRouter.delete('/:id', middleware.userExtractor, async (req, res) => {
+  console.log(req.body)
   const blog = await Blog.findById(req.params.id)
   if (!blog) {
     res.status(404).json({ error: 'blog cannot be found' })
@@ -43,20 +44,26 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (req, res) => {
   if (!(blog.user.toString() === req.user.id.toString())) {
     return res.status(401).json({ error: 'unauthorized action! ' })
   }
+  console.log(req.params.id)
   await Blog.findByIdAndDelete(req.params.id)
   res.status(204).end()
 })
 blogsRouter.put('/:id', async (req, res) => {
+  console.log(req.body)
   const newBlog = {
     title: req.body.title,
     author: req.body.author,
     url: req.body.url,
     likes: req.body.likes,
-    user: req.user,
+    user: req.body.user.id,
   }
 
-  Blog.findByIdAndUpdate(req.params.id, newBlog, { new: true }).then(
-    (updatedBlog) => res.status(201).json(updatedBlog)
-  )
+  await Blog.findByIdAndUpdate(req.params.id, newBlog, { new: true })
+  const returnedBlog = await Blog.findById(req.params.id).populate('user', {
+    username: 1,
+    name: 1,
+  })
+
+  res.status(201).json(returnedBlog)
 })
 module.exports = blogsRouter

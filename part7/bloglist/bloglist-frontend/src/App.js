@@ -1,30 +1,26 @@
 import React, { useEffect } from 'react'
-import Blog from './components/Blog'
 import Notification from './components/Notifications'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import BlogList from './components/blogList'
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationsReducer'
-import {
-  fetchBlogs,
-  createBlog,
-  addLike,
-  deleteBlog,
-} from './reducers/blogsReducer'
+import { fetchBlogs, createBlog } from './reducers/blogsReducer'
 import { checkLocalstorage, logOut } from './reducers/userReducer'
+import { fetchAllUsers } from './reducers/usersReducer'
+import Users from './components/Users'
+import { Routes, Route } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const blogList = useSelector((state) => state.blogs)
   const user = useSelector((state) => state.user)
-
-  const sortedBlogs = [...blogList].sort((a1, a2) => a2.likes - a1.likes)
 
   useEffect(() => {
     dispatch(fetchBlogs())
     dispatch(checkLocalstorage())
+    dispatch(fetchAllUsers())
   }, [])
 
   const blogFormHandler = (blogObject) => {
@@ -49,29 +45,9 @@ const App = () => {
       )
     }
   }
-  const removeBlog = async (id) => {
-    try {
-      dispatch(deleteBlog(id))
-
-      dispatch(
-        createNotification({
-          message: 'blog has successfuly been deleted',
-          color: 'green',
-        })
-      )
-    } catch (error) {
-      dispatch(
-        createNotification({ message: error.response.data.error, color: 'red' })
-      )
-    }
-  }
 
   const logout = () => {
-    window.localStorage.removeItem('loggedNoteappUser')
     dispatch(logOut())
-  }
-  const addNewLike = async (object) => {
-    dispatch(addLike(object))
   }
 
   return (
@@ -80,23 +56,15 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <Notification />
-          <p>{user.name} has logged in</p>{' '}
+          <p>{user.name} has logged in</p>
+
+          <Routes>
+            <Route path="/blogs" element={<BlogList user={user} />} />
+            <Route path="/" element={null} />
+            <Route path="/users" element={<Users />} />
+          </Routes>
+
           <button onClick={logout}>logout</button>
-          <div className="blogs-list">
-            {sortedBlogs
-              .sort((a, b) =>
-                a.likes < b.likes ? 1 : a.likes > b.likes ? -1 : 0
-              )
-              .map((blog) => (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  newLike={addNewLike}
-                  user={user}
-                  removeBlog={removeBlog}
-                />
-              ))}
-          </div>
           <Togglable buttonLabel={'new blog'}>
             {' '}
             <BlogForm createBlog={blogFormHandler} />

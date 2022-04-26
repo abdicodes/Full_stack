@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-const Blog = ({ blog, newLike, user, removeBlog }) => {
+import { useDispatch } from 'react-redux'
+import { addLike, deleteBlog } from '../reducers/blogsReducer'
+
+const Blog = ({ blog, user }) => {
+  const dispatch = useDispatch()
   const [view, setView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -9,31 +13,26 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
     borderWidth: 1,
     marginBottom: 5,
   }
+
+  console.log(blog.user.id, user.id)
+
   const viewHandler = (event) => {
     event.preventDefault()
     setView(!view)
   }
 
-  const buttonText = { text: view ? 'hide' : 'view' }
-  const addLikes = (event) => {
-    event.preventDefault()
-    const myObject = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes,
-      user: blog.user,
-      id: blog.id,
-    }
-    newLike(myObject)
-  }
-  const deleteBlog = () => {
+  const removeBlog = () => {
     const popUp = window.confirm('are you sure you want to delete the blog')
     if (popUp) {
-      removeBlog(blog.id)
+      dispatch(deleteBlog(blog.id))
     }
   }
 
+  const buttonText = { text: view ? 'hide' : 'view' }
+
+  const addNewLike = () => {
+    dispatch(addLike(blog))
+  }
   return (
     <div style={blogStyle} className="blog">
       <p>
@@ -50,13 +49,13 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
           <p>{blog.url}</p>
           <p className="likes">
             <span className="likesNum"> {blog.likes}</span>{' '}
-            <button className="like-button" onClick={addLikes}>
+            <button className="like-button" onClick={addNewLike}>
               likes
             </button>
           </p>
           <p>{blog.author}</p>
           {user.id === blog.user.id && (
-            <button className="delete-button" onClick={deleteBlog}>
+            <button className="delete-button" onClick={removeBlog}>
               delete
             </button>
           )}
@@ -66,9 +65,7 @@ const Blog = ({ blog, newLike, user, removeBlog }) => {
   )
 }
 Blog.propTypes = {
-  removeBlog: PropTypes.func.isRequired,
   blog: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  newLike: PropTypes.func.isRequired,
 }
 export default Blog

@@ -42,6 +42,7 @@ export const checkLocalstorage = () => {
 export const logOut = () => {
   return (dispatch) => {
     dispatch(addUser(null))
+    window.localStorage.removeItem('loggedNoteappUser')
   }
 }
 
