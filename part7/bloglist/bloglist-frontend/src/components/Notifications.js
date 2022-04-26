@@ -1,4 +1,3 @@
-// import notificationsReducer from '../reducers/notificationsReducer'
 import { useSelector } from 'react-redux'
 
 const Notification = () => {

@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notifications'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
@@ -14,41 +12,21 @@ import {
   addLike,
   deleteBlog,
 } from './reducers/blogsReducer'
+import { checkLocalstorage, logOut } from './reducers/userReducer'
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-
   const dispatch = useDispatch()
 
   const blogList = useSelector((state) => state.blogs)
+  const user = useSelector((state) => state.user)
 
   const sortedBlogs = [...blogList].sort((a1, a2) => a2.likes - a1.likes)
 
   useEffect(() => {
     dispatch(fetchBlogs())
+    dispatch(checkLocalstorage())
   }, [])
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-  const handleLogin = async (userObject) => {
-    try {
-      const user = await loginService.login(userObject)
-      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-    } catch (exception) {
-      dispatch(
-        createNotification({ message: 'Wrong credentials', color: 'red' })
-      )
-    }
-  }
   const blogFormHandler = (blogObject) => {
     try {
       dispatch(
@@ -90,7 +68,7 @@ const App = () => {
 
   const logout = () => {
     window.localStorage.removeItem('loggedNoteappUser')
-    setUser(null)
+    dispatch(logOut())
   }
   const addNewLike = async (object) => {
     dispatch(addLike(object))
@@ -129,7 +107,7 @@ const App = () => {
           <h2>Login in to application</h2>
           <Notification />
           <Togglable buttonLabel={'login'}>
-            <LoginForm loginUser={handleLogin} />
+            <LoginForm />
           </Togglable>
         </div>
       )}
