@@ -4,6 +4,7 @@ import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import BlogList from './components/blogList'
+import UserBlogs from './UserBlogs'
 import { useDispatch, useSelector } from 'react-redux'
 import { createNotification } from './reducers/notificationsReducer'
 import { fetchBlogs, createBlog } from './reducers/blogsReducer'
@@ -62,6 +63,7 @@ const App = () => {
             <Route path="/blogs" element={<BlogList user={user} />} />
             <Route path="/" element={null} />
             <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserBlogs />} />
           </Routes>
 
           <button onClick={logout}>logout</button>

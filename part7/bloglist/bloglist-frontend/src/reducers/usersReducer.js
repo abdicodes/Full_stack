@@ -13,7 +13,6 @@ const users = createSlice({
 export const fetchAllUsers = () => {
   return async (dispatch) => {
     const allUSers = await axios.get('/api/users')
-    console.log(allUSers.data)
     dispatch(fetchUsers(allUSers.data))
   }
 }
