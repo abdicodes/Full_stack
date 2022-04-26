@@ -40,9 +40,7 @@ export const createBlog = (blog) => {
 }
 export const addLike = (blog) => {
   return async (dispatch) => {
-    console.log(blog)
     const a = await blogs.modify(blog.id, blog)
-    console.log(a)
 
     dispatch(updateBlog(a))
   }
