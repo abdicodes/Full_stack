@@ -14,7 +14,9 @@ import { fetchAllUsers } from './reducers/usersReducer'
 import Users from './components/Users'
 import { Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar'
-
+import theme from './services/assets/theme'
+import { ThemeProvider } from '@mui/material/styles'
+import { Box, Card, CardHeader, CardContent, CssBaseline } from '@mui/material/'
 const App = () => {
   const dispatch = useDispatch()
 
@@ -51,35 +53,47 @@ const App = () => {
 
   return (
     <>
-      {user !== null ? (
-        <div>
-          <NavBar user={user} />
-          <h2>blogs</h2>
-          <Notification />
-          <p>{user.name} has logged in</p>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {user !== null ? (
+          <Box>
+            <NavBar user={user} />
+            <h2>blogs</h2>
+            <Notification />
+            <p>{user.name} has logged in</p>
 
-          <Routes>
-            <Route path="/blogs" element={<BlogList user={user} />} />
-            <Route path="/" element={null} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/users/:id" element={<UserBlogs />} />
-            <Route path="/blogs/:id" element={<Blog />} />
-          </Routes>
+            <Routes>
+              <Route path="/blogs" element={<BlogList user={user} />} />
+              <Route path="/" element={null} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/users/:id" element={<UserBlogs />} />
+              <Route path="/blogs/:id" element={<Blog />} />
+            </Routes>
 
-          <Togglable buttonLabel={'new blog'}>
-            {' '}
-            <BlogForm createBlog={blogFormHandler} />
-          </Togglable>
-        </div>
-      ) : (
-        <div>
-          <h2>Login in to application</h2>
-          <Notification />
-          <Togglable buttonLabel={'login'}>
-            <LoginForm />
-          </Togglable>
-        </div>
-      )}
+            <Togglable buttonLabel={'new blog'}>
+              {' '}
+              <BlogForm createBlog={blogFormHandler} />
+            </Togglable>
+          </Box>
+        ) : (
+          <Box
+            height="100vh"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+          >
+            <Card style={{ maxWidth: '50%', alignSelf: 'center' }}>
+              <CardHeader title="Login in to application" />
+              <CardContent>
+                <Togglable buttonLabel={'login'}>
+                  <LoginForm />
+                </Togglable>
+              </CardContent>
+            </Card>
+            <Notification />
+          </Box>
+        )}
+      </ThemeProvider>
     </>
   )
 }
