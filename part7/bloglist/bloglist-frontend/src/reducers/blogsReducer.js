@@ -39,9 +39,20 @@ export const fetchBlogs = () => {
 }
 export const createBlog = (blog) => {
   return async (dispatch) => {
-    const a = await blogs.create(blog)
-
-    dispatch(newBlog(a))
+    try {
+      const a = await blogs.create(blog)
+      dispatch(newBlog(a))
+      dispatch(
+        createNotification({
+          message: `${blog.title} by ${blog.author} is added!`,
+          severity: 'success',
+        })
+      )
+    } catch ({ response }) {
+      dispatch(
+        createNotification({ message: response.data.error, severity: 'error' })
+      )
+    }
   }
 }
 export const addLike = (blog) => {
@@ -67,12 +78,15 @@ export const deleteBlog = (id) => {
       dispatch(
         createNotification({
           message: 'blog has successfuly been deleted',
-          color: 'green',
+          severity: 'success',
         })
       )
     } catch (error) {
       dispatch(
-        createNotification({ message: error.response.data.error, color: 'red' })
+        createNotification({
+          message: error.response.data.error,
+          severity: 'error',
+        })
       )
     }
   }

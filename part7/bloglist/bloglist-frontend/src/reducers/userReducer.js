@@ -23,7 +23,7 @@ export const userInfo = (userObject) => {
       dispatch(addUser(user))
     } catch (error) {
       dispatch(
-        createNotification({ message: 'Wrong credentials', color: 'red' })
+        createNotification({ message: 'Wrong credentials', severity: 'error' })
       )
     }
   }

@@ -7,14 +7,14 @@ import BlogList from './components/blogList'
 import UserBlogs from './components/UserBlogs'
 import Blog from './components/Blog'
 import { useDispatch, useSelector } from 'react-redux'
-import { createNotification } from './reducers/notificationsReducer'
+// import { createNotification } from './reducers/notificationsReducer'
 import { fetchBlogs, createBlog } from './reducers/blogsReducer'
 import { checkLocalstorage } from './reducers/userReducer'
 import { fetchAllUsers } from './reducers/usersReducer'
 import Users from './components/Users'
 import { Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar'
-import theme from './services/assets/theme'
+import theme from './assets/theme'
 import { ThemeProvider } from '@mui/material/styles'
 import { Box, Card, CardHeader, CardContent, CssBaseline } from '@mui/material/'
 const App = () => {
@@ -29,26 +29,13 @@ const App = () => {
   }, [])
 
   const blogFormHandler = (blogObject) => {
-    try {
-      dispatch(
-        createBlog({
-          title: blogObject.title,
-          author: blogObject.author,
-          url: blogObject.url,
-        })
-      )
-
-      dispatch(
-        createNotification({
-          message: `${blogObject.title} by ${blogObject.author} is added!`,
-          color: 'green',
-        })
-      )
-    } catch ({ response }) {
-      dispatch(
-        createNotification({ message: response.data.error, color: 'red' })
-      )
-    }
+    dispatch(
+      createBlog({
+        title: blogObject.title,
+        author: blogObject.author,
+        url: blogObject.url,
+      })
+    )
   }
 
   return (
@@ -56,12 +43,18 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {user !== null ? (
-          <Box>
+          <Box
+            className="blogs-list"
+            height="100vh"
+            display="flex"
+            flexDirection="column"
+            // justifyContent="center"
+            alignItems="center"
+          >
             <NavBar user={user} />
             <h2>blogs</h2>
             <Notification />
             <p>{user.name} has logged in</p>
-
             <Routes>
               <Route path="/blogs" element={<BlogList user={user} />} />
               <Route path="/" element={null} />
@@ -69,9 +62,7 @@ const App = () => {
               <Route path="/users/:id" element={<UserBlogs />} />
               <Route path="/blogs/:id" element={<Blog />} />
             </Routes>
-
             <Togglable buttonLabel={'new blog'}>
-              {' '}
               <BlogForm createBlog={blogFormHandler} />
             </Togglable>
           </Box>
@@ -82,6 +73,7 @@ const App = () => {
             flexDirection="column"
             justifyContent="center"
           >
+            <Notification />
             <Card style={{ maxWidth: '50%', alignSelf: 'center' }}>
               <CardHeader title="Login in to application" />
               <CardContent>
@@ -90,7 +82,6 @@ const App = () => {
                 </Togglable>
               </CardContent>
             </Card>
-            <Notification />
           </Box>
         )}
       </ThemeProvider>
