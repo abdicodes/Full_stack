@@ -1,6 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { addLike, deleteBlog, addComment } from '../reducers/blogsReducer'
 import { useMatch, useNavigate } from 'react-router-dom'
+import {
+  Button,
+  TextField,
+  Box,
+  Card,
+  CardActions,
+  CardHeader,
+  CardContent,
+  Grid,
+  Typography,
+} from '@mui/material'
 
 const Blog = () => {
   const navigate = useNavigate()
@@ -11,14 +22,6 @@ const Blog = () => {
   const user = useSelector((state) => state.user)
 
   const dispatch = useDispatch()
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
 
   const removeBlog = () => {
     const popUp = window.confirm('are you sure you want to delete the blog')
@@ -41,35 +44,63 @@ const Blog = () => {
     dispatch(addComment(blog.id, comment))
   }
   return (
-    <div style={blogStyle} className="blog">
-      <h1>{blog.title} </h1>
+    <Box
+      height="100vh"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+    >
+      <Grid
+        item
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Card elevation={3} style={{ minheight: '70%' }}>
+          <CardHeader title={`Title: ${blog.title}`} />
+          <CardContent>
+            <Typography> Author: {blog.author}</Typography>
+            <Typography> URL: {blog.url}</Typography>
+            <Typography> likes: {blog.likes}</Typography>
+            <CardActions>
+              <Button variant="outlined" onClick={addNewLike}>
+                Like
+              </Button>
 
-      <p>{blog.url}</p>
-      <p className="likes">
-        <span className="likesNum"> {blog.likes}</span>{' '}
-        <button className="like-button" onClick={addNewLike}>
-          likes
-        </button>
-      </p>
-      <p>{blog.author}</p>
-      {user.id === blog.user.id && (
-        <button className="delete-button" onClick={removeBlog}>
-          delete
-        </button>
-      )}
-      <div>
-        <h3>comments</h3>
-        <ul>
-          {blog.comments.map((comment, i) => (
-            <p key={i}>{comment}</p>
-          ))}
-        </ul>
-        <form onSubmit={comment} id="add-comments">
-          <input name="comment" type="text" placeholder="add a comment" />
-          <button type="submit">add comment</button>
-        </form>
-      </div>
-    </div>
+              {user.id === blog.user.id && (
+                <Button
+                  variant="outlined"
+                  className="delete-button"
+                  onClick={removeBlog}
+                >
+                  Delete blog
+                </Button>
+              )}
+            </CardActions>
+            <Typography>comments</Typography>
+            <ul>
+              {blog.comments.map((comment, i) => (
+                <Typography key={i}>{comment}</Typography>
+              ))}
+            </ul>
+            <form onSubmit={comment} id="add-comments">
+              <TextField
+                size="small"
+                name="comment"
+                type="text"
+                label="add a comment"
+                style={{ marginRight: '20px' }}
+              />
+              <Button variant="contained" type="submit">
+                submit
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+        <Box></Box>
+      </Grid>
+    </Box>
   )
 }
 

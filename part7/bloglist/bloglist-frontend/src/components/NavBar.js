@@ -76,6 +76,12 @@ const NavBar = ({ user }) => {
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
                   {' '}
+                  <Link to={'/'}>home </Link>
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  {' '}
                   <Link to={'/blogs'}>blogs </Link>
                 </Typography>
               </MenuItem>
@@ -98,6 +104,16 @@ const NavBar = ({ user }) => {
           >
             {user.name} is logged in
           </Typography>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              component={Link}
+              to="/"
+            >
+              Home
+            </Button>
+          </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <Button
               onClick={handleCloseNavMenu}
