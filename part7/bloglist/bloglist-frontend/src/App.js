@@ -7,7 +7,6 @@ import BlogList from './components/blogList'
 import UserBlogs from './components/UserBlogs'
 import Blog from './components/Blog'
 import { useDispatch, useSelector } from 'react-redux'
-// import { createNotification } from './reducers/notificationsReducer'
 import { fetchBlogs, createBlog } from './reducers/blogsReducer'
 import { checkLocalstorage } from './reducers/userReducer'
 import { fetchAllUsers } from './reducers/usersReducer'
@@ -48,8 +47,8 @@ const App = () => {
             height="100vh"
             display="flex"
             flexDirection="column"
-            // justifyContent="center"
             alignItems="center"
+            margin="20px"
           >
             <NavBar user={user} />
             <h2>blogs</h2>
