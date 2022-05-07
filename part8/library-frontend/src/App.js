@@ -1,13 +1,14 @@
 import { useState } from 'react'
 
-import { ALL_AUTHORS } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS } from './queries'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 
 const App = () => {
   const authors = useQuery(ALL_AUTHORS)
+  const books = useQuery(ALL_BOOKS)
   const [page, setPage] = useState('authors')
 
   if (authors.loading) {
@@ -24,7 +25,7 @@ const App = () => {
 
       <Authors show={page === 'authors'} authors={authors} />
 
-      <Books show={page === 'books'} />
+      <Books show={page === 'books'} books={books} />
 
       <NewBook show={page === 'add'} />
     </div>
