@@ -1,12 +1,13 @@
-import { useQuery } from '@apollo/client'
-import { ALL_AUTHORS } from '../queries'
 const Authors = (props) => {
   if (!props.show) {
     return null
   }
   // const authors = []
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const result = useQuery(ALL_AUTHORS)
+
+  if (props.authors.loading) {
+    return <div>loading...</div>
+  }
+  console.log(props.authors)
 
   return (
     <div>
@@ -18,7 +19,7 @@ const Authors = (props) => {
             <th>born</th>
             <th>books</th>
           </tr>
-          {result.map((a) => (
+          {props.authors.data.allAuthors.map((a) => (
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
