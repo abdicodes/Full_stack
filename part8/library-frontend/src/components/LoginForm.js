@@ -10,8 +10,6 @@ const LoginForm = (props) => {
   })
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-
-  console.log(userName, password)
   const submit = async (event) => {
     event.preventDefault()
     loginReq({
@@ -20,7 +18,6 @@ const LoginForm = (props) => {
   }
   useEffect(() => {
     if (result.data) {
-      console.log(result.data)
       const token = result.data.login.value
       props.setToken(token)
       localStorage.setItem('library-user-token', token)
