@@ -19,6 +19,10 @@ const BirthForm = (props) => {
     setName('')
     setYear('')
   }
+
+  if (!props.show) {
+    return null
+  }
   return (
     <div>
       <h2>set birthyear</h2>

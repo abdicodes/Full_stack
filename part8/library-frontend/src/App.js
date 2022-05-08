@@ -6,12 +6,13 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { useQuery } from '@apollo/client'
 import BirthForm from './components/BirthForm'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
   const [page, setPage] = useState('authors')
-
+  console.log(page)
   if (authors.loading) {
     return <div>loading...</div>
   }
@@ -22,6 +23,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={() => setPage('login')}>login</button>
       </div>
 
       <Authors show={page === 'authors'} authors={authors} />
@@ -30,7 +32,8 @@ const App = () => {
 
       <NewBook show={page === 'add'} />
 
-      <BirthForm authors={authors} />
+      <BirthForm show={page === 'authors'} authors={authors} />
+      <LoginForm show={page === 'login'} />
     </div>
   )
 }
