@@ -5,6 +5,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { useQuery } from '@apollo/client'
+import BirthForm from './components/BirthForm'
 
 const App = () => {
   const authors = useQuery(ALL_AUTHORS)
@@ -28,6 +29,8 @@ const App = () => {
       <Books show={page === 'books'} books={books} />
 
       <NewBook show={page === 'add'} />
+
+      <BirthForm />
     </div>
   )
 }
