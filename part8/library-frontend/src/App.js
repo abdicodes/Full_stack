@@ -30,7 +30,7 @@ const App = () => {
 
       <NewBook show={page === 'add'} />
 
-      <BirthForm />
+      <BirthForm authors={authors} />
     </div>
   )
 }

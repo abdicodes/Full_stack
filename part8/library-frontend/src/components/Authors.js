@@ -7,7 +7,6 @@ const Authors = (props) => {
   if (props.authors.loading) {
     return <div>loading...</div>
   }
-  console.log(props.authors)
 
   return (
     <div>
