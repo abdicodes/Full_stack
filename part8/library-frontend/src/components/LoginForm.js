@@ -20,8 +20,9 @@ const LoginForm = (props) => {
   }
   useEffect(() => {
     if (result.data) {
+      console.log(result.data)
       const token = result.data.login.value
-      //   props.setToken(token)
+      props.setToken(token)
       localStorage.setItem('library-user-token', token)
     }
   }, [result.data]) // eslint-disable-line
