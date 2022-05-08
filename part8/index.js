@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const Book = require('./models/books')
 const Author = require('./models/authors')
 const { v1: uuid } = require('uuid')
+const { findOne } = require('./models/books')
 
 const db = process.env.MONGODB_URI_LIBRARY
 console.log('connecting to', db)
@@ -193,20 +194,38 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args) => {
       let author = await Author.findOne({ name: args.author })
-
       if (!author) {
         author = new Author({ name: args.author })
-        await author.save()
+        try {
+          await author.save()
+        } catch (error) {
+          throw new UserInputError('author must be at least 4 characters')
+        }
       }
-      const book = new Book({ ...args, author: author })
-      return book.save()
+      const book = new Book({ ...args, author: author._id })
+      try {
+        await book.save()
+      } catch (error) {
+        throw new UserInputError(
+          'invalid input: book must be at least 2 characters!'
+        )
+      }
+      return book.populate('author')
     },
     editAuthor: async (root, args) => {
-      return Author.findOneAndUpdate(
-        { name: args.name },
-        { born: args.setBornTo },
-        { new: true }
-      )
+      const author = await Author.findOne({ name: args.name })
+      if (!author?.name) {
+        throw new UserInputError('author cannot be found')
+      }
+      author.born = args.setBornTo
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return author
     },
   },
 }
