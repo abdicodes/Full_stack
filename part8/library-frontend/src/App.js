@@ -54,7 +54,7 @@ const App = () => {
       <LoginForm show={page === 'login'} setToken={setToken} />
       <Recommended
         show={page === 'recommended'}
-        genre={me.data.me.favoriteGenre}
+        genre={me?.data.me?.favoriteGenre}
         books={books}
       />
     </div>
