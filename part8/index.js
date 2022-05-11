@@ -90,37 +90,14 @@ const resolvers = {
       return [...new Set(books.map((item) => item.genres).flat())]
     },
     allBooks: async (root, args) => {
-      // if (!args.author && !args.genre) return books
-      // if (args.author && args.genre)
-      //   return books.filter(
-      //     (book) =>
-      //       book.author === args.author && book.genres.includes(args.genre)
-      //   )
-      // return books.filter((book) =>
-      //   args.author
-      //     ? book.author === args.author
-      //     : book.genres.includes(args.genre)
-      // )
-      // const books = await Book.find({})
-      // return books.map(book =>  book = {...book, author:  })
-      console.log(args.genre)
       if (!args.genre || args.genre === 'all') {
         return Book.find({}).populate('author')
       }
-      console.log('hello')
       return Book.find({ genres: { $all: [`${args.genre}`] } }).populate(
         'author'
       )
     },
     allAuthors: async () => {
-      // return authors.map(
-      //   (author) =>
-      //     (author = {
-      //       ...author,
-      //       bookCount: () =>
-      //         books.filter((book) => book.author === author.name).length,
-      //     })
-      // )
       const authors = await Author.find({})
       const books = await Book.find({})
 
@@ -194,8 +171,6 @@ const resolvers = {
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
-      console.log(args.username)
-      console.log(user)
 
       if (!user || args.password !== 'secret') {
         throw new UserInputError('wrong credentials')

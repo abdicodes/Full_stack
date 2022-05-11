@@ -26,7 +26,6 @@ const NewBook = (props) => {
         genres: genres,
       },
     })
-    console.log('add book...')
 
     setTitle('')
     setPublished('')
