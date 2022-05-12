@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 
-import { ALL_AUTHORS, ALL_BOOKS, ME } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED, ME } from './queries'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
 import BirthForm from './components/BirthForm'
 import LoginForm from './components/LoginForm'
 import Recommended from './components/Recommended'
@@ -16,6 +16,15 @@ const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      alert(
+        ` a new book ${subscriptionData.data.bookAdded.title} by ${subscriptionData.data.bookAdded.author.name} has been added to library`
+      )
+    },
+  })
+
   useEffect(() => {
     if (localStorage) setToken(localStorage['library-user-token'])
   }, [])
