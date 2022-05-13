@@ -61,7 +61,6 @@ export const GENRE = gql`
     genres
   }
 `
-
 export const LOGIN = gql`
   mutation loginform($username: String!, $password: String!) {
     login(username: $username, password: $password) {
@@ -69,20 +68,13 @@ export const LOGIN = gql`
     }
   }
 `
-// const BOOK_DETAILS = gql`
-//   fragment BookDetails on BOOK {
-//     id
-//     title
-//     author {
-//       name
-//     }
-//     genres  ${BOOK_DETAILS}
-//   }
-// `
 export const BOOK_ADDED = gql`
   subscription {
     bookAdded {
       title
+      published
+      genres
+      id
       author {
         name
       }

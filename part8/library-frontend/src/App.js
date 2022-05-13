@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-
 import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED, ME } from './queries'
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -20,8 +19,15 @@ const App = () => {
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
       alert(
-        ` a new book ${subscriptionData.data.bookAdded.title} by ${subscriptionData.data.bookAdded.author.name} has been added to library`
+        ` a new book ${subscriptionData.data.bookAdded.title} by 
+        ${subscriptionData.data.bookAdded.author.name} has been added to library`
       )
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(subscriptionData.data.bookAdded),
+        }
+      })
+      console.log(client.cache)
     },
   })
 

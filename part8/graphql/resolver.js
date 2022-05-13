@@ -10,6 +10,7 @@ const resolvers = {
   Query: {
     me: (root, args, context) => context.currentUser,
     bookCount: async () => {
+      console.log('bookCount')
       const books = await Book.find({})
       return books.length
     },
@@ -32,6 +33,7 @@ const resolvers = {
     allAuthors: async () => {
       const authors = await Author.find({})
       const books = await Book.find({})
+      console.log('allAuthors')
 
       return authors.map((author) => {
         return {
