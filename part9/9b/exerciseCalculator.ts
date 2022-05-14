@@ -10,12 +10,33 @@ interface ExerciseResult {
     average: number;
 }
 
+interface Inputs {
+    array: Array<number>;
+    rating: number;
+}
+const parseArguments2 = (args: Array<string>): Inputs => {
+    if (args.length < 4) throw new Error('Not enough arguments');
+    if (args.length > 15) throw new Error('Too many arguments');
+    let a = [];
+    for (let i = 3; i < args.length; i++) {
+        if (isNaN(Number(args[i]))) {
+            throw new Error('Provided values were not numbers!');
+        }
+        a.push(Number(args[i]));
+    }
+
+    return {
+        array: a,
+        rating: Number(args[2]),
+    };
+};
+
 const calculateExercises = (
     arg1: Array<number>,
     arg2: number
 ): ExerciseResult => {
     const trainingDays = arg1.filter((day) => day !== 0).length;
-    const average = arg1.reduce((sum, day) => sum + day, 0) / 7;
+    const average = arg1.reduce((sum, day) => sum + day, 0) / arg1.length;
     const success = average > arg2;
     const rating: rating =
         average < 1.75 ? 1 : average > 1.75 && average < 2.25 ? 2 : 3;
@@ -38,5 +59,13 @@ const calculateExercises = (
     };
 };
 
-console.log(calculateExercises([0, 0, 0, 4.5, 0, 3, 1], 2));
-console.log(process.argv);
+try {
+    const { array, rating } = parseArguments2(process.argv);
+    console.log(calculateExercises(array, rating));
+} catch (error: unknown) {
+    let errorMessage = 'Something bad happened.';
+    if (error instanceof Error) {
+        errorMessage += ' Error: ' + error.message;
+    }
+    console.log(errorMessage);
+}
