@@ -1,6 +1,17 @@
 import express from 'express';
 const app = express();
+import cors from 'cors';
+
 app.use(express.json());
+
+const allowedOrigins = ['http://localhost:3000'];
+
+const options: cors.CorsOptions = {
+    origin: allowedOrigins,
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+app.use(cors(options));
 
 const PORT = 3001;
 
