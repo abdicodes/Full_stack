@@ -5,7 +5,7 @@ import patientService from '../services/patientService';
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-    res.send(patientService.getEntries());
+    res.send(patientService.getNonSensitiveEntries());
     // res.send('hello');
 });
 
