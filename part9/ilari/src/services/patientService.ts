@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import patientsData from '../../data/patients';
 
 export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn'>;
-import { PatientEntry } from '../types';
+import { Gender, PatientEntry } from '../types';
 
 const getEntries = (): PatientEntry[] => {
     return patientsData;
@@ -21,10 +21,10 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
 const addPatient = (
     name: string,
     dateOfBirth: string,
-    gender: string,
+    gender: Gender,
     occupation: string,
     ssn: string
-): NonSensitivePatientEntry => {
+): PatientEntry => {
     const newPatient = {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         id: uuidv4(),
