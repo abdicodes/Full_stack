@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import express from 'express';
-
 import patientService from '../services/patientService';
+import toNewPatientEntry from '../utils';
 
 const router = express.Router();
 
@@ -13,15 +13,10 @@ router.get('/', (_req, res) => {
 router.post('/', (_req, res) => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const { name, dateOfBirth, gender, occupation, ssn } = _req.body;
+        // const { name, dateOfBirth, gender, occupation, ssn } = _req.body;
+        const newPatient = toNewPatientEntry(_req.body);
 
-        const patient = patientService.addPatient(
-            name,
-            dateOfBirth,
-            gender,
-            occupation,
-            ssn
-        );
+        const patient = patientService.addPatient(newPatient);
         res.send(patient);
     } catch (err: unknown) {
         let errorMessage = 'Something went wrong.';
