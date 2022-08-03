@@ -1,5 +1,6 @@
 // import { PartsComponent } from './types'
 import { CoursePart } from './types'
+
 /**
  * Helper function for exhaustive type checking
  */
@@ -39,6 +40,17 @@ const Part = ({ part }: { part: CoursePart }) => {
           <br /> submit to {part.exerciseSubmissionLink}
         </p>
       )
+    case 'special':
+      return (
+        <p>
+          <strong>
+            {part.name} {part.exerciseCount}
+          </strong>
+          <br /> {part.description}
+          <br /> required skills: {part.requirements.join(', ')}
+        </p>
+      )
+
     default:
       return assertNever(part)
   }
