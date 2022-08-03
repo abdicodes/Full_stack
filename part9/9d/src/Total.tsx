@@ -1,9 +1,9 @@
 import { PartsComponent } from './types'
-const Total = (props: []) => {
+const Total = ({ parts }: { parts: PartsComponent[] }) => {
   return (
     <p>
       Number of exercises{' '}
-      {props.reduce((sum, part: PartsComponent) => sum + part.exerciseCount, 0)}
+      {parts.reduce((sum, part: PartsComponent) => sum + part.exerciseCount, 0)}
     </p>
   )
 }

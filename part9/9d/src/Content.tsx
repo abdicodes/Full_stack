@@ -1,10 +1,10 @@
 import Part from './Part'
 import { PartsComponent } from './types'
 
-export default function Content(props: []) {
+export default function Content({ parts }: { parts: PartsComponent[] }) {
   return (
     <div>
-      {props.map((part: PartsComponent, i) => (
+      {parts.map((part: PartsComponent, i) => (
         <Part key={i} name={part.name} exerciseCount={part.exerciseCount} />
       ))}
     </div>
