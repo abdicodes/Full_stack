@@ -1,11 +1,11 @@
 import Part from './Part'
-import { PartsComponent } from './types'
+import { CoursePart } from './types'
 
-export default function Content({ parts }: { parts: PartsComponent[] }) {
+export default function Content({ parts }: { parts: CoursePart[] }) {
   return (
     <div>
-      {parts.map((part: PartsComponent, i) => (
-        <Part key={i} name={part.name} exerciseCount={part.exerciseCount} />
+      {parts.map((part: CoursePart, i) => (
+        <Part key={i} part={part} />
       ))}
     </div>
   )
