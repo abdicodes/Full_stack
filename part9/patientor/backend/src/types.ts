@@ -12,7 +12,7 @@ export interface PatientEntry {
     ssn: string;
     gender: Gender;
     occupation: string;
-    entries: Entry[];
+    entries: Entry[] | never[];
 }
 export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn' | 'entries'>;
 export type NewPatientEntry = Omit<PatientEntry, 'id'>;

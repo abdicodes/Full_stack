@@ -10,6 +10,14 @@ router.get('/', (_req, res) => {
     // res.send('hello');
 });
 
+router.get('/:id', (_req, res) => {
+    const id = _req.params.id;
+    const entry = patientService.getPatientEntry(id);
+    if (entry) {
+        res.send(entry);
+    } else res.status(400).send('Patient info are not found!');
+});
+
 router.post('/', (_req, res) => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
