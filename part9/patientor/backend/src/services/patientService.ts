@@ -1,8 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import patientsData from '../../data/patients';
 
-export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn'>;
-import { PatientEntry, NewPatientEntry } from '../types';
+import {
+    PatientEntry,
+    NewPatientEntry,
+    NonSensitivePatientEntry,
+} from '../types';
 
 const getEntries = (): PatientEntry[] => {
     return patientsData;
@@ -18,6 +21,11 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
         })
     );
 };
+
+const getPatientEntry = (id: string): PatientEntry | undefined => {
+    return patientsData.find((patient) => patient.id === id);
+};
+
 const addPatient = (patientEntry: NewPatientEntry): PatientEntry => {
     const newPatient = {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -28,4 +36,9 @@ const addPatient = (patientEntry: NewPatientEntry): PatientEntry => {
     return newPatient;
 };
 
-export default { getEntries, getNonSensitiveEntries, addPatient };
+export default {
+    getEntries,
+    getNonSensitiveEntries,
+    addPatient,
+    getPatientEntry,
+};
