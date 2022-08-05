@@ -31,7 +31,12 @@
     }
   },
   "parser": "@typescript-eslint/parser",
+  // "parserOptions": {
+  //   "project": "./tsconfig.json"
+  // }
   "parserOptions": {
-    "project": "./part9/patientor/frontend/tsconfig.json"
+    "project": "tsconfig.json",
+    "tsconfigRootDir": "./part9/patientor/frontend",
+    "sourceType": "module"
   }
 }
