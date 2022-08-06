@@ -14,6 +14,10 @@ import {
   CardActions,
   CardHeader,
 } from '@material-ui/core';
+// import { FemaleIcon, MaleIcon, TransgenderIcon } from '@mi/uicons-material';
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
+import TransgenderIcon from '@mui/icons-material/Transgender';
 
 const SinglePatientPage = () => {
   const [{ patients }, dispatch] = useStateValue();
@@ -59,10 +63,24 @@ const SinglePatientPage = () => {
         }}
       >
         <Card elevation={3}>
-          <CardHeader title={patient.name} />
+          <CardHeader
+            title={
+              <div>
+                <p>
+                  {patient.name}{' '}
+                  {patient.gender === 'male' ? (
+                    <MaleIcon />
+                  ) : patient.gender === 'female' ? (
+                    <FemaleIcon />
+                  ) : (
+                    <TransgenderIcon />
+                  )}
+                </p>
+              </div>
+            }
+          />
           <CardContent>
             <Typography> Date of birth: {patient.dateOfBirth}</Typography>
-            <Typography> Gendder: {patient.gender}</Typography>
             <Typography> occupation: {patient.occupation}</Typography>
             <Typography>ssn: {patient.ssn}</Typography>
             <Typography>id: {patient.id}</Typography>
