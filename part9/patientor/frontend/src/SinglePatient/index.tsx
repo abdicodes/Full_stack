@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { apiBaseUrl } from '../constants';
-import { useStateValue } from '../state';
+import { useStateValue, singlePatient } from '../state';
 import { Patient } from '../types';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -32,12 +32,13 @@ const SinglePatientPage = () => {
     if (id && patients && !patients[id]?.ssn) {
       const fetchPatient = async () => {
         try {
-          const { data: patientListFromApi } = await axios.get<Patient>(
+          const { data: patientInfo } = await axios.get<Patient>(
             `${apiBaseUrl}/patients/${id}`
           );
-          console.log(patientListFromApi);
-          dispatch({ type: 'SET_SINGLE_PATIENT', payload: patientListFromApi });
-          setPatient(patientListFromApi);
+
+          //   dispatch({ type: 'SET_SINGLE_PATIENT', payload: patientListFromApi });
+          dispatch(singlePatient(patientInfo));
+          setPatient(patientInfo);
         } catch (e) {
           console.error(e);
         }

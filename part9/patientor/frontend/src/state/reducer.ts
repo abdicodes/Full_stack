@@ -54,3 +54,16 @@ export const patientList = (payload: Patient[]): Action => {
     payload: payload,
   };
 };
+export const addPatient = (payload: Patient): Action => {
+  return {
+    type: 'ADD_PATIENT',
+    payload: payload,
+  };
+};
+
+export const singlePatient = (payload: Patient): Action => {
+  return {
+    type: 'SET_SINGLE_PATIENT',
+    payload: payload,
+  };
+};
