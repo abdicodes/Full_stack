@@ -3,12 +3,23 @@ import axios from 'axios';
 import { apiBaseUrl } from '../constants';
 import { useStateValue } from '../state';
 import { Patient } from '../types';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  CardActions,
+  CardHeader,
+} from '@material-ui/core';
 
 const SinglePatientPage = () => {
   const [{ patients }, dispatch] = useStateValue();
   const [patient, setPatient] = React.useState<Patient>();
   const { id } = useParams();
+  const history = useNavigate();
 
   React.useEffect(() => {
     if (patients && id) {
@@ -32,11 +43,38 @@ const SinglePatientPage = () => {
     }
   }, [dispatch]);
   console.log(patient);
+  if (!patient) return null;
   return (
-    <div>
-      <p> {patient ? patient.ssn : null}</p>
-      {/* <p> {id ? patients[id].name : null}</p> */}
-    </div>
+    <Box
+      height="100vh"
+      display="flex"
+      flexDirection="column"
+      justifyContent="top"
+    >
+      <Grid
+        item
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Card elevation={3}>
+          <CardHeader title={patient.name} />
+          <CardContent>
+            <Typography> Date of birth: {patient.dateOfBirth}</Typography>
+            <Typography> Gendder: {patient.gender}</Typography>
+            <Typography> occupation: {patient.occupation}</Typography>
+            <Typography>ssn: {patient.ssn}</Typography>
+            <Typography>id: {patient.id}</Typography>
+            <CardActions>
+              <Button variant="text" onClick={() => history('/')}>
+                Go back
+              </Button>
+            </CardActions>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Box>
   );
 };
 
