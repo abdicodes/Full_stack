@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { apiBaseUrl } from '../constants';
-import { useStateValue, singlePatient } from '../state';
-import { Patient } from '../types';
+import { useStateValue, singlePatient, diagnosisList } from '../state';
+import { Patient, Diagnosis } from '../types';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -20,7 +20,7 @@ import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
 const SinglePatientPage = () => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnosis }, dispatch] = useStateValue();
   const [patient, setPatient] = React.useState<Patient>();
   const { id } = useParams();
   const history = useNavigate();
@@ -36,6 +36,11 @@ const SinglePatientPage = () => {
             `${apiBaseUrl}/patients/${id}`
           );
 
+          const { data: diagnosisListFromApi } = await axios.get<Diagnosis[]>(
+            `${apiBaseUrl}/diagnoses`
+          );
+          dispatch(diagnosisList(diagnosisListFromApi));
+
           //   dispatch({ type: 'SET_SINGLE_PATIENT', payload: patientListFromApi });
           dispatch(singlePatient(patientInfo));
           setPatient(patientInfo);
@@ -44,11 +49,9 @@ const SinglePatientPage = () => {
         }
       };
       void fetchPatient();
-      console.log(patients);
     }
   }, [dispatch]);
-  console.log(patient);
-  if (!patient || !patient.entries) return null;
+  if (!patient || !patient.entries || !diagnosis) return null;
   return (
     <Box
       height="100vh"
@@ -92,7 +95,10 @@ const SinglePatientPage = () => {
                   <ul>
                     {entry.diagnosisCodes
                       ? entry.diagnosisCodes.map((code) => (
-                          <li key={code}> {code} </li>
+                          <li key={code}>
+                            {' '}
+                            {code} {diagnosis[code].name}{' '}
+                          </li>
                         ))
                       : null}
                   </ul>

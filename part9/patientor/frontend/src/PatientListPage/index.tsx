@@ -47,7 +47,6 @@ const PatientListPage = () => {
       }
     }
   };
-  console.log(patients);
 
   return (
     <div className="App">
