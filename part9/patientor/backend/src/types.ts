@@ -22,3 +22,11 @@ export enum Gender {
     Female = 'female',
     Other = 'other',
 }
+
+export interface BaseEntry {
+    id: string;
+    description: string;
+    date: string;
+    specialist: string;
+    diagnosisCodes?: Array<DiagnoseEntry['code']>;
+}
