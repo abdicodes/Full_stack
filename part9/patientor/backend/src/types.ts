@@ -11,7 +11,7 @@ export interface PatientEntry {
     ssn: string;
     gender: Gender;
     occupation: string;
-    entries: Entry[] | never[];
+    entries: Entry[];
 }
 export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn' | 'entries'>;
 export type NewPatientEntry = Omit<PatientEntry, 'id'>;
@@ -28,6 +28,7 @@ interface BaseEntry {
     date: string;
     specialist: string;
     diagnosisCodes?: Array<DiagnoseEntry['code']>;
+    type: 'OccupationalHealthcare' | 'HealthCheck' | 'Hospital';
 }
 
 export enum HealthCheckRating {
