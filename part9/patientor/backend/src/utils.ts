@@ -50,6 +50,10 @@ const parseGender = (gender: unknown): Gender => {
     }
     return gender;
 };
+
+// const isEntryType = (entries: unknown[]): Entry[] => {
+
+// }
 type Fields = {
     name: unknown;
     dateOfBirth: unknown;

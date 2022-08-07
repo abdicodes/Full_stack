@@ -48,7 +48,7 @@ const SinglePatientPage = () => {
     }
   }, [dispatch]);
   console.log(patient);
-  if (!patient) return null;
+  if (!patient || !patient.entries) return null;
   return (
     <Box
       height="100vh"
@@ -80,11 +80,25 @@ const SinglePatientPage = () => {
               </div>
             }
           />
-          <CardContent>
+          <CardContent style={{ display: 'grid', alignItems: 'baseline' }}>
             <Typography> Date of birth: {patient.dateOfBirth}</Typography>
             <Typography> occupation: {patient.occupation}</Typography>
             <Typography>ssn: {patient.ssn}</Typography>
-            <Typography>id: {patient.id}</Typography>
+            <Typography variant="subtitle1">Entries: </Typography>
+            {patient.entries.map((entry, i) => {
+              return (
+                <ul key={i}>
+                  <Typography>{entry.description}</Typography>
+                  <ul>
+                    {entry.diagnosisCodes
+                      ? entry.diagnosisCodes.map((code) => (
+                          <li key={code}> {code} </li>
+                        ))
+                      : null}
+                  </ul>
+                </ul>
+              );
+            })}
             <CardActions>
               <Button variant="text" onClick={() => history('/')}>
                 Go back
