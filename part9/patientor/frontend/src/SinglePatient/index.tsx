@@ -2,7 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import { apiBaseUrl } from '../constants';
 import { useStateValue, singlePatient, diagnosisList } from '../state';
-import { Patient, Diagnosis } from '../types';
+import {
+  Patient,
+  Diagnosis,
+  Entry,
+  HospitalEntry,
+  HealthCheckEntry,
+  OccupationalHealthcareEntry,
+} from '../types';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -13,11 +20,20 @@ import {
   Typography,
   CardActions,
   CardHeader,
+  Paper,
 } from '@material-ui/core';
 // import { FemaleIcon, MaleIcon, TransgenderIcon } from '@mi/uicons-material';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+
+const assertNever = (value: never): never => {
+  throw new Error(`Unhandled error ${JSON.stringify(value)}`);
+};
 
 const SinglePatientPage = () => {
   const [{ patients, diagnosis }, dispatch] = useStateValue();
@@ -51,6 +67,65 @@ const SinglePatientPage = () => {
       void fetchPatient();
     }
   }, [dispatch]);
+
+  const HospitalComponent: React.FC<{ entry: HospitalEntry }> = ({ entry }) => (
+    <Paper>
+      <Typography>
+        {' '}
+        {entry.date} <LocalHospitalIcon />
+      </Typography>
+      <Typography>{entry.description}</Typography>
+      <Typography> Discharge date: {entry.discharge.date}</Typography>
+      <Typography>Discharge grounds: {entry.discharge.criteria}</Typography>
+    </Paper>
+  );
+  const HealthCheckComponent: React.FC<{ entry: HealthCheckEntry }> = ({
+    entry,
+  }) => (
+    <Paper>
+      <Typography>
+        {' '}
+        {entry.date} <MonitorHeartIcon />
+      </Typography>
+      <Typography>{entry.description}</Typography>
+      <Typography>
+        {' '}
+        Health status: <FavoriteIcon />
+      </Typography>
+      <Typography>Diagnosed by: {entry.specialist}</Typography>
+    </Paper>
+  );
+
+  const OccupationalHComponent: React.FC<{
+    entry: OccupationalHealthcareEntry;
+  }> = ({ entry }) => (
+    <Paper>
+      <Typography>
+        {' '}
+        {entry.date} <HealthAndSafetyIcon />
+      </Typography>
+      <Typography>{entry.description}</Typography>
+      {entry.sickLeave ? (
+        <Typography>
+          Sick leave: from{' '}
+          {`${entry.sickLeave.startDate}  to ${entry.sickLeave.endDate}`}
+        </Typography>
+      ) : null}
+    </Paper>
+  );
+
+  const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
+    switch (entry.type) {
+      case 'Hospital':
+        return <HospitalComponent entry={entry} />;
+      case 'HealthCheck':
+        return <HealthCheckComponent entry={entry} />;
+      case 'OccupationalHealthcare':
+        return <OccupationalHComponent entry={entry} />;
+      default:
+        return assertNever(entry);
+    }
+  };
   if (!patient || !patient.entries || !diagnosis) return null;
   return (
     <Box
@@ -90,19 +165,7 @@ const SinglePatientPage = () => {
             <Typography variant="subtitle1">Entries: </Typography>
             {patient.entries.map((entry, i) => {
               return (
-                <ul key={i}>
-                  <Typography>{entry.description}</Typography>
-                  <ul>
-                    {entry.diagnosisCodes
-                      ? entry.diagnosisCodes.map((code) => (
-                          <li key={code}>
-                            {' '}
-                            {code} {diagnosis[code].name}{' '}
-                          </li>
-                        ))
-                      : null}
-                  </ul>
-                </ul>
+                <ul key={i}>{entry ? <EntryDetails entry={entry} /> : null}</ul>
               );
             })}
             <CardActions>
