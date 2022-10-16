@@ -19,10 +19,13 @@ const parseArguments1 = (args: Array<string>): Bmi => {
 
 const calculateBmi = (height: number, weight: number): string => {
     if (height === 0) return 'invalid input';
-    let bmi = weight / (height / 100) ** 2;
+    const bmi = weight / (height / 100) ** 2;
     if (24.9 >= bmi && bmi >= 18.5) return ' Normal (healthy weight)';
     if (bmi < 18.5) return 'Underweight (unhealthy weight)';
     if (bmi > 24.9) return 'overweight (obese weight)';
+    else {
+        throw new Error('Provided values were not numbers');
+    }
 };
 
 try {
