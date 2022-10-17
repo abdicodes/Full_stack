@@ -5,6 +5,7 @@ import {
     PatientEntry,
     NewPatientEntry,
     NonSensitivePatientEntry,
+    Entry,
 } from '../types';
 
 const getEntries = (): PatientEntry[] => {
@@ -35,10 +36,17 @@ const addPatient = (patientEntry: NewPatientEntry): PatientEntry => {
     patientsData.push(newPatient);
     return newPatient;
 };
+const addEntry = (entry: Entry, id: string): Entry => {
+    patientsData.forEach((patient) =>
+        patient.id == id ? patient.entries.push(entry) : null
+    );
+    return entry;
+};
 
 export default {
     getEntries,
     getNonSensitiveEntries,
     addPatient,
     getPatientEntry,
+    addEntry,
 };
