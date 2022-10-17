@@ -1,41 +1,41 @@
 export interface HeaderComponent {
-  title: string
+  title: string;
 }
 export interface PartsComponent {
-  name: string
-  exerciseCount: number
+  name: string;
+  exerciseCount: number;
 }
 export type TotalCount = {
-  total: number
-}
+  total: number;
+};
 
 interface CoursePartBase {
-  name: string
-  exerciseCount: number
-  type: string
+  name: string;
+  exerciseCount: number;
+  type: string;
 }
 interface CourseProjectPart extends CoursePartBase {
-  type: 'groupProject'
-  groupProjectCount: number
+  type: 'groupProject';
+  groupProjectCount: number;
 }
 interface CourseWithDescription extends CoursePartBase {
-  description: string
+  description: string;
 }
 
 interface CourseNormalPart extends CourseWithDescription {
-  type: 'normal'
+  type: 'normal';
 }
 
 interface CourseSubmissionPart extends CourseWithDescription {
-  type: 'submission'
-  exerciseSubmissionLink: string
+  type: 'submission';
+  exerciseSubmissionLink: string;
 }
 interface CourseSpecialPart extends CourseWithDescription {
-  type: 'special'
-  requirements: string[]
+  type: 'special';
+  requirements: string[];
 }
 export type CoursePart =
   | CourseNormalPart
   | CourseProjectPart
   | CourseSubmissionPart
-  | CourseSpecialPart
+  | CourseSpecialPart;

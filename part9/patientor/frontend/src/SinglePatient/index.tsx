@@ -40,6 +40,13 @@ const SinglePatientPage = () => {
   const [patient, setPatient] = React.useState<Patient>();
   const { id } = useParams();
   const history = useNavigate();
+  const iconColor = (rating: number): string => {
+    if (rating == 0) return 'green';
+    if (rating == 1) return 'yellow';
+    if (rating == 2) return 'orange';
+    if (rating == 3) return 'red';
+    else return 'black';
+  };
 
   React.useEffect(() => {
     if (patients && id) {
@@ -90,7 +97,8 @@ const SinglePatientPage = () => {
       <Typography>{entry.description}</Typography>
       <Typography>
         {' '}
-        Health status: <FavoriteIcon />
+        Health status:{' '}
+        <FavoriteIcon style={{ color: iconColor(entry.healthCheckRating) }} />
       </Typography>
       <Typography>Diagnosed by: {entry.specialist}</Typography>
     </Paper>
@@ -111,6 +119,7 @@ const SinglePatientPage = () => {
           {`${entry.sickLeave.startDate}  to ${entry.sickLeave.endDate}`}
         </Typography>
       ) : null}
+      <Typography> Diagnosed by: {entry.specialist}</Typography>
     </Paper>
   );
 
