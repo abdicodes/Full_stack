@@ -2,7 +2,7 @@ import { Button, Grid } from '@material-ui/core';
 import { Field, Form, Formik } from 'formik';
 import React from 'react';
 import { useStateValue } from '../state';
-import { Diagnosis, HealthCheckRating } from '../types';
+import { HealthCheckRating } from '../types';
 import {
   DiagnosisSelection,
   SelectField,
@@ -15,7 +15,7 @@ export type EntryFormValues = {
   specialist: string;
   description: string;
   healthCheckRating: HealthCheckRating;
-  diagnosis: Diagnosis;
+  diagnosisCodes: string[];
 };
 interface Props {
   onCancel: () => void;
@@ -39,7 +39,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
         description: '',
         healthCheckRating: 0,
 
-        diagnosis: { code: '', name: '' },
+        diagnosisCodes: [],
       }}
       onSubmit={onSubmit}
       // validate={(values) => {
