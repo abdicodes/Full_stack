@@ -30,6 +30,8 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import AddEntryModal from '../AddEntryModal';
+import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
 
 const assertNever = (value: never): never => {
   throw new Error(`Unhandled error ${JSON.stringify(value)}`);
@@ -38,6 +40,7 @@ const assertNever = (value: never): never => {
 const SinglePatientPage = () => {
   const [{ patients, diagnosis }, dispatch] = useStateValue();
   const [patient, setPatient] = React.useState<Patient>();
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const { id } = useParams();
   const history = useNavigate();
   const iconColor = (rating: number): string => {
@@ -47,7 +50,7 @@ const SinglePatientPage = () => {
     if (rating == 3) return 'red';
     else return 'black';
   };
-
+  const openModal = (): void => setModalOpen(true);
   React.useEffect(() => {
     if (patients && id) {
       setPatient(patients[id]);
@@ -185,6 +188,15 @@ const SinglePatientPage = () => {
           </CardContent>
         </Card>
       </Grid>
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={(value: EntryFormValues) => console.log(value)}
+        // error={error}
+        onClose={() => console.log('closed')}
+      />
+      <Button variant="contained" onClick={() => openModal()}>
+        Add New Patient
+      </Button>
     </Box>
   );
 };
