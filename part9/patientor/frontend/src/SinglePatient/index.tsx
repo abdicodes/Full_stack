@@ -41,6 +41,7 @@ const SinglePatientPage = () => {
   const [{ patients, diagnosis }, dispatch] = useStateValue();
   const [patient, setPatient] = React.useState<Patient>();
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>();
   const { id } = useParams();
   const history = useNavigate();
   const iconColor = (rating: number): string => {
@@ -51,6 +52,10 @@ const SinglePatientPage = () => {
     else return 'black';
   };
   const openModal = (): void => setModalOpen(true);
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
   React.useEffect(() => {
     if (patients && id) {
       setPatient(patients[id]);
@@ -66,8 +71,6 @@ const SinglePatientPage = () => {
             `${apiBaseUrl}/diagnoses`
           );
           dispatch(diagnosisList(diagnosisListFromApi));
-
-          //   dispatch({ type: 'SET_SINGLE_PATIENT', payload: patientListFromApi });
           dispatch(singlePatient(patientInfo));
           setPatient(patientInfo);
         } catch (e) {
@@ -84,26 +87,26 @@ const SinglePatientPage = () => {
         `${apiBaseUrl}/patients/${id as string}/entries`,
         values
       );
-      console.log(newEntry);
-      // dispatch({ type: 'ADD_PATIENT', payload: newPatient });
-      // dispatch(addPatient(newPatient));
-      // closeModal();
+      setPatient((): Patient => {
+        if (patient) {
+          const updatedEntries = patient.entries.concat(newEntry);
+          return { ...patient, entries: updatedEntries };
+        } else throw new Error('Something wrong with adding new entry ');
+      });
+      dispatch(singlePatient(patient as Patient));
     } catch (e: unknown) {
-      // if (axios.isAxiosError(e)) {
-      //   console.error(e?.response?.data || 'Unrecognized axios error');
-      //   setError(
-      //     String(e?.response?.data?.error) || 'Unrecognized axios error'
-      //   );
-      // } else {
-      //   console.error('Unknown error', e);
-      //   setError('Unknown error');
-      // }
       if (axios.isAxiosError(e)) {
         console.error(e?.response?.data || 'Unrecognized axios error');
+        setError(
+          String(e?.response?.data?.error) || 'Unrecognized axios error'
+        );
+      } else {
+        console.error('Unknown error', e);
+        setError('Unknown error');
       }
     }
   };
-  console.log(patient);
+
   const HospitalComponent: React.FC<{ entry: HospitalEntry }> = ({ entry }) => (
     <Paper>
       <Typography>
@@ -217,8 +220,8 @@ const SinglePatientPage = () => {
       <AddEntryModal
         modalOpen={modalOpen}
         onSubmit={submitNewEntry}
-        // error={error}
-        onClose={() => console.log('closed')}
+        error={error}
+        onClose={closeModal}
       />
       <Button variant="contained" onClick={() => openModal()}>
         Add New Patient

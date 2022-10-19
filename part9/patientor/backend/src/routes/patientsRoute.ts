@@ -41,8 +41,8 @@ router.post('/:id/entries', (_req, res) => {
     try {
         const patientId = _req.params.id;
         const entry = toNewMedicalEntry(_req.body);
-        patientService.addEntry(entry, patientId);
-        res.send(entry);
+        const result = patientService.addEntry(entry, patientId);
+        res.send(result);
     } catch (err: unknown) {
         let errorMessage = 'Something went wrong.';
         if (err instanceof Error) {
