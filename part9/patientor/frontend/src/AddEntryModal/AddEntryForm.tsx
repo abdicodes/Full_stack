@@ -43,9 +43,26 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
         diagnosisCodes: [],
       }}
       onSubmit={onSubmit}
-      // validate={(values) => {
-      //   /// ...
-      // }}
+      validate={(values) => {
+        const requiredError = 'Field is required';
+        const errors: { [field: string]: string } = {};
+        if (!values.date) {
+          errors.name = requiredError;
+        }
+        if (!values.specialist) {
+          errors.ssn = requiredError;
+        }
+        if (!values.description) {
+          errors.dateOfBirth = requiredError;
+        }
+        if (!values.diagnosisCodes) {
+          errors.occupation = requiredError;
+        }
+        if (!values.healthCheckRating) {
+          errors.occupation = requiredError;
+        }
+        return errors;
+      }}
     >
       {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
