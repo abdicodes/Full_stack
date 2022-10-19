@@ -40,7 +40,8 @@ const addEntry = (entry: Entry, id: string): Entry => {
     patientsData.forEach((patient) =>
         patient.id == id ? patient.entries.push(entry) : null
     );
-    return entry;
+    const clone = (({ diagnosisCodes, ...rest }) => rest)(entry);
+    return clone;
 };
 
 export default {

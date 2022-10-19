@@ -16,6 +16,7 @@ export type EntryFormValues = {
   description: string;
   healthCheckRating: HealthCheckRating;
   diagnosisCodes: string[];
+  type: string;
 };
 interface Props {
   onCancel: () => void;
@@ -38,7 +39,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
         specialist: '',
         description: '',
         healthCheckRating: 0,
-
+        type: 'HealthCheck',
         diagnosisCodes: [],
       }}
       onSubmit={onSubmit}

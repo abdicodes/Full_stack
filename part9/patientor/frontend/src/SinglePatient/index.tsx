@@ -78,6 +78,32 @@ const SinglePatientPage = () => {
     }
   }, [dispatch]);
 
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id as string}/entries`,
+        values
+      );
+      console.log(newEntry);
+      // dispatch({ type: 'ADD_PATIENT', payload: newPatient });
+      // dispatch(addPatient(newPatient));
+      // closeModal();
+    } catch (e: unknown) {
+      // if (axios.isAxiosError(e)) {
+      //   console.error(e?.response?.data || 'Unrecognized axios error');
+      //   setError(
+      //     String(e?.response?.data?.error) || 'Unrecognized axios error'
+      //   );
+      // } else {
+      //   console.error('Unknown error', e);
+      //   setError('Unknown error');
+      // }
+      if (axios.isAxiosError(e)) {
+        console.error(e?.response?.data || 'Unrecognized axios error');
+      }
+    }
+  };
+  console.log(patient);
   const HospitalComponent: React.FC<{ entry: HospitalEntry }> = ({ entry }) => (
     <Paper>
       <Typography>
@@ -190,7 +216,7 @@ const SinglePatientPage = () => {
       </Grid>
       <AddEntryModal
         modalOpen={modalOpen}
-        onSubmit={(value: EntryFormValues) => console.log(value)}
+        onSubmit={submitNewEntry}
         // error={error}
         onClose={() => console.log('closed')}
       />
