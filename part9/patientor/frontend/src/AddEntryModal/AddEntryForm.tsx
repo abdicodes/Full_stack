@@ -1,6 +1,5 @@
 import { Button, Grid } from '@material-ui/core';
 import { Field, Form, Formik } from 'formik';
-import React from 'react';
 import { useStateValue } from '../state';
 import { HealthCheckRating } from '../types';
 import {
@@ -47,19 +46,19 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
         const requiredError = 'Field is required';
         const errors: { [field: string]: string } = {};
         if (!values.date) {
-          errors.name = requiredError;
+          errors.date = requiredError;
         }
         if (!values.specialist) {
-          errors.ssn = requiredError;
+          errors.specialist = requiredError;
         }
         if (!values.description) {
-          errors.dateOfBirth = requiredError;
+          errors.description = requiredError;
         }
         if (!values.diagnosisCodes) {
-          errors.occupation = requiredError;
+          errors.diagnosisCodes = requiredError;
         }
         if (!values.healthCheckRating) {
-          errors.occupation = requiredError;
+          errors.healthCheckRating = requiredError;
         }
         return errors;
       }}
