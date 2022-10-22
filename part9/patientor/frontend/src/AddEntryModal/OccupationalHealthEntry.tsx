@@ -45,7 +45,6 @@ const OccupationalHealthEntry = ({ onSubmit, onCancel }: Props) => {
         if (!values.employerName) {
           errors.healthCheckRating = requiredError;
         }
-        console.log(errors);
         return errors;
       }}
     >

@@ -83,7 +83,6 @@ const SinglePatientPage = () => {
 
   const submitNewEntry = async (values: EntryFormValues) => {
     try {
-      console.log(values);
       const { data: newEntry } = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${id as string}/entries`,
         values
@@ -211,8 +210,19 @@ const SinglePatientPage = () => {
               );
             })}
             <CardActions>
-              <Button variant="text" onClick={() => history('/')}>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => history('/')}
+              >
                 Go back
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => openModal()}
+              >
+                Add New Entry
               </Button>
             </CardActions>
           </CardContent>
@@ -224,9 +234,6 @@ const SinglePatientPage = () => {
         error={error}
         onClose={closeModal}
       />
-      <Button variant="contained" onClick={() => openModal()}>
-        Add New Entry
-      </Button>
     </Box>
   );
 };

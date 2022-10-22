@@ -30,27 +30,21 @@ const HospitalEntry = ({ onSubmit, onCancel }: Props) => {
         const errors: { [field: string]: string } = {};
         if (!values.date) {
           errors.date = requiredError;
-          console.log(errors);
         }
         if (!values.specialist) {
           errors.specialist = requiredError;
-          console.log(errors);
         }
         if (!values.description) {
           errors.description = requiredError;
-          console.log(errors);
         }
         if (!values.diagnosisCodes) {
           errors.diagnosisCodes = requiredError;
-          console.log(errors);
         }
         if (!values.discharge.date) {
           errors['discharge.date'] = requiredError;
-          console.log(errors);
         }
         if (!values.discharge.criteria) {
           errors['discharge.criteria'] = requiredError;
-          console.log(errors);
         }
 
         return errors;
