@@ -129,7 +129,11 @@ export const toNewMedicalEntry = (entry: EntryFields): Entry => {
                 employerName: parseName(entry.employerName),
             };
 
-            if (entry.sickLeave) {
+            if (
+                entry.sickLeave &&
+                entry.sickLeave.endDate &&
+                entry.sickLeave.startDate
+            ) {
                 newEntry.sickLeave = {
                     startDate: parseDate(entry.sickLeave.startDate),
                     endDate: parseDate(entry.sickLeave.endDate),
