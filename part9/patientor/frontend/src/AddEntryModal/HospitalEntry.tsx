@@ -1,26 +1,14 @@
 import { Button, Grid } from '@material-ui/core';
 import { Field, Form, Formik } from 'formik';
 import { useStateValue } from '../state';
-import { HealthCheckRating, HealthCheckFormValues } from '../types';
-import {
-  DiagnosisSelection,
-  SelectField,
-  TextField,
-  RatingOptions,
-} from './FormField';
+import { HospitalFormValues } from '../types';
+import { DiagnosisSelection, TextField } from './FormField';
 
 interface Props {
   onCancel: () => void;
-  onSubmit: (values: HealthCheckFormValues) => void;
+  onSubmit: (values: HospitalFormValues) => void;
 }
-const RatingOption: RatingOptions[] = [
-  { value: HealthCheckRating.Healthy, label: '0' },
-  { value: HealthCheckRating.LowRisk, label: '1' },
-  { value: HealthCheckRating.HighRisk, label: '2' },
-  { value: HealthCheckRating.CriticalRisk, label: '3' },
-];
-
-const HealthCheckEntry = ({ onSubmit, onCancel }: Props) => {
+const HospitalEntry = ({ onSubmit, onCancel }: Props) => {
   const [{ diagnosis }] = useStateValue();
 
   return (
@@ -29,8 +17,11 @@ const HealthCheckEntry = ({ onSubmit, onCancel }: Props) => {
         date: '',
         specialist: '',
         description: '',
-        healthCheckRating: 0,
-        type: 'HealthCheck',
+        discharge: {
+          date: '',
+          criteria: '',
+        },
+        type: 'Hospital',
         diagnosisCodes: [],
       }}
       onSubmit={onSubmit}
@@ -39,19 +30,29 @@ const HealthCheckEntry = ({ onSubmit, onCancel }: Props) => {
         const errors: { [field: string]: string } = {};
         if (!values.date) {
           errors.date = requiredError;
+          console.log(errors);
         }
         if (!values.specialist) {
           errors.specialist = requiredError;
+          console.log(errors);
         }
         if (!values.description) {
           errors.description = requiredError;
+          console.log(errors);
         }
-        if (values.diagnosisCodes.length === 0) {
+        if (!values.diagnosisCodes) {
           errors.diagnosisCodes = requiredError;
+          console.log(errors);
         }
-        if (!values.healthCheckRating) {
-          errors.healthCheckRating = requiredError;
+        if (!values.discharge.date) {
+          errors['discharge.date'] = requiredError;
+          console.log(errors);
         }
+        if (!values.discharge.criteria) {
+          errors['discharge.criteria'] = requiredError;
+          console.log(errors);
+        }
+
         return errors;
       }}
     >
@@ -81,10 +82,17 @@ const HealthCheckEntry = ({ onSubmit, onCancel }: Props) => {
               name="date"
               component={TextField}
             />
-            <SelectField
-              name="healthCheckRating"
-              label="healthCheckRating"
-              options={RatingOption}
+            <Field
+              label="discharge date"
+              placeholder="discharge date"
+              name="discharge.date"
+              component={TextField}
+            />
+            <Field
+              label="discharge criteria"
+              placeholder="discharge criteria"
+              name="discharge.criteria"
+              component={TextField}
             />
             <Grid>
               <Grid item>
@@ -117,4 +125,4 @@ const HealthCheckEntry = ({ onSubmit, onCancel }: Props) => {
     </Formik>
   );
 };
-export default HealthCheckEntry;
+export default HospitalEntry;

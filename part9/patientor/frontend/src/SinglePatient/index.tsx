@@ -83,6 +83,7 @@ const SinglePatientPage = () => {
 
   const submitNewEntry = async (values: EntryFormValues) => {
     try {
+      console.log(values);
       const { data: newEntry } = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${id as string}/entries`,
         values
@@ -224,7 +225,7 @@ const SinglePatientPage = () => {
         onClose={closeModal}
       />
       <Button variant="contained" onClick={() => openModal()}>
-        Add New Patient
+        Add New Entry
       </Button>
     </Box>
   );

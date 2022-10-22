@@ -11,15 +11,20 @@ interface Props {
   error?: string;
 }
 
-const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => (
-  <Dialog fullWidth={true} open={modalOpen} onClose={() => onClose()}>
-    <DialogTitle>Add a new Entry</DialogTitle>
-    <Divider />
-    <DialogContent>
-      {error && <Alert severity="error">{`Error: ${error}`}</Alert>}
-      <AddEntryForm onSubmit={onSubmit} onCancel={onClose} />
-    </DialogContent>
-  </Dialog>
-);
+const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => {
+  // const [type, setType]= React.useState<string>('');
+  return (
+    <Dialog fullWidth={true} open={modalOpen} onClose={() => onClose()}>
+      <DialogTitle>Add a new Entry</DialogTitle>
+
+      <Divider />
+      <DialogContent>
+        {error && <Alert severity="error">{`Error: ${error}`}</Alert>}
+
+        <AddEntryForm onSubmit={onSubmit} onCancel={onClose} />
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default AddEntryModal;
