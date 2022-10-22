@@ -23,7 +23,6 @@ import {
   CardHeader,
   Paper,
 } from '@material-ui/core';
-// import { FemaleIcon, MaleIcon, TransgenderIcon } from '@mi/uicons-material';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';

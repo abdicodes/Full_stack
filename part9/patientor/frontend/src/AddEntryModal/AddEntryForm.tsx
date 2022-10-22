@@ -13,15 +13,15 @@ interface Props {
 const typeOptions: TypeOptions[] = [
   {
     value: 'Hospital',
-    label: 'Hospital',
+    label: 'Hospital Entry',
   },
   {
     value: 'OccupationalHealthcare',
-    label: 'OccupationalHealthcare',
+    label: 'Occupational Healthcare Entry',
   },
   {
     value: 'HealthCheck',
-    label: 'HealthCheck',
+    label: 'Health Check Entry',
   },
 ];
 const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
