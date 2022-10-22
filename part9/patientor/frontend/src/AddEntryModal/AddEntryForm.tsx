@@ -47,25 +47,8 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
       onSubmit={onSubmit}
     >
       {({ values }: { values: EntryFormValues }) => {
-        // switch (values.type) {
-        //   case 'HealthCheck':
-        //     return <HealthCheckEntry onSubmit={onSubmit} onCancel={onCancel} />;
-        //   case 'Hospital':
-        //     return <HospitalEntry onSubmit={onSubmit} onCancel={onCancel} />;
-        // }
-
         return (
           <>
-            {/* <fieldset className="form-group">
-              <label>Entry Type</label>
-              <Field name="type" component="select" label="hello">
-                <option value="HealthCheck">Heath checkup Entry</option>
-                <option value="Hospital">Hospital admission Entry</option>
-                <option value="OccupationalHealthcare">
-                  Occupational Healthcare Entry
-                </option>
-              </Field>
-            </fieldset> */}
             <SelectType name="type" label="type" options={typeOptions} />
             {values.type == 'HealthCheck' && (
               <HealthCheckEntry onSubmit={onSubmit} onCancel={onCancel} />
