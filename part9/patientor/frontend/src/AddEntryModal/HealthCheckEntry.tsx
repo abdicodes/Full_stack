@@ -49,6 +49,7 @@ const HealthCheckEntry = ({ onSubmit, onCancel }: Props) => {
         if (values.diagnosisCodes.length === 0) {
           errors.diagnosisCodes = requiredError;
         }
+
         if (!values.healthCheckRating) {
           errors.healthCheckRating = requiredError;
         }

@@ -37,7 +37,7 @@ const HospitalEntry = ({ onSubmit, onCancel }: Props) => {
         if (!values.description) {
           errors.description = requiredError;
         }
-        if (!values.diagnosisCodes) {
+        if (values.diagnosisCodes.length === 0) {
           errors.diagnosisCodes = requiredError;
         }
         if (!values.discharge.date) {
@@ -46,7 +46,31 @@ const HospitalEntry = ({ onSubmit, onCancel }: Props) => {
         if (!values.discharge.criteria) {
           errors['discharge.criteria'] = requiredError;
         }
-
+        if (errors['discharge.criteria'] && !errors['discharge.date']) {
+          return {
+            ...errors,
+            discharge: {
+              criteria: requiredError,
+            },
+          };
+        }
+        if (errors['discharge.date'] && !errors['discharge.criteria']) {
+          return {
+            ...errors,
+            discharge: {
+              date: requiredError,
+            },
+          };
+        }
+        if (errors['discharge.date'] && errors['discharge.criteria']) {
+          return {
+            ...errors,
+            discharge: {
+              criteria: requiredError,
+              date: requiredError,
+            },
+          };
+        }
         return errors;
       }}
     >
