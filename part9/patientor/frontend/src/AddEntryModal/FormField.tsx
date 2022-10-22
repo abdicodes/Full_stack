@@ -17,6 +17,11 @@ export type RatingOptions = {
   label: string;
 };
 
+export type EntryOptions = {
+  value: string;
+  label: string;
+};
+
 // props for select field component
 type SelectFieldProps = {
   name: string;

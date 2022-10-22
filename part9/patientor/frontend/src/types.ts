@@ -61,3 +61,36 @@ export type Entry =
   | HospitalEntry
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
+
+interface BasicEntryFormValues {
+  date: string;
+  specialist: string;
+  description: string;
+  diagnosisCodes: string[];
+  type: string;
+}
+
+export interface HealthCheckFormValues extends BasicEntryFormValues {
+  type: 'HealthCheck';
+  healthCheckRating: HealthCheckRating;
+}
+
+export interface HospitalFormValues extends BasicEntryFormValues {
+  type: 'Hospital';
+  discharge: {
+    date: string;
+    criteria: string;
+  };
+}
+export interface OccupationalHealthFormValues extends BasicEntryFormValues {
+  type: 'OccupationalHealthcare';
+  employerName: string;
+  sickLeave?: {
+    startDate: string;
+    endDate: string;
+  };
+}
+export type EntryFormValues =
+  | OccupationalHealthFormValues
+  | HospitalFormValues
+  | HealthCheckFormValues;

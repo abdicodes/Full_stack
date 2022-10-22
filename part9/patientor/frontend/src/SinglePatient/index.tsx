@@ -9,6 +9,7 @@ import {
   HospitalEntry,
   HealthCheckEntry,
   OccupationalHealthcareEntry,
+  EntryFormValues,
 } from '../types';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -31,7 +32,6 @@ import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import AddEntryModal from '../AddEntryModal';
-import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
 
 const assertNever = (value: never): never => {
   throw new Error(`Unhandled error ${JSON.stringify(value)}`);
